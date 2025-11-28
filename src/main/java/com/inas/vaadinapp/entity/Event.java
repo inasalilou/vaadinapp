@@ -50,8 +50,9 @@ public class Event {
     private User createur;
 
     // Relation : liste des réservations (on fera Reservation plus tard)
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Reservation> reservations = new ArrayList<>();
+
 
     public Event() {}
 
