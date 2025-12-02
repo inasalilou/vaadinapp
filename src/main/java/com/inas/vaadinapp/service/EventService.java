@@ -2,10 +2,12 @@ package com.inas.vaadinapp.service;
 
 import com.inas.vaadinapp.entity.*;
 import com.inas.vaadinapp.repository.EventRepository;
+import com.inas.vaadinapp.repository.ReservationRepository;
 import com.inas.vaadinapp.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -15,10 +17,12 @@ public class EventService {
 
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final ReservationRepository reservationRepository;
 
-    public EventService(EventRepository eventRepository, UserRepository userRepository) {
+    public EventService(EventRepository eventRepository, UserRepository userRepository, ReservationRepository reservationRepository) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     /* --------------------- CREATION ------------------------ */
@@ -32,7 +36,7 @@ public class EventService {
             throw new IllegalArgumentException("Seuls les ADMIN ou ORGANIZER peuvent créer un événement");
         }
 
-        event.setCreateur(user);
+        event.setOrganisateur(user);
         event.setStatus(EventStatus.BROUILLON);
 
         return eventRepository.save(event);
@@ -49,7 +53,7 @@ public class EventService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable"));
 
-        if (!event.getCreateur().getId().equals(userId) && user.getRole() != Role.ADMIN) {
+        if (!event.getOrganisateur().getId().equals(userId) && user.getRole() != Role.ADMIN) {
             throw new IllegalArgumentException("Vous n'avez pas la permission de modifier cet événement");
         }
 
@@ -64,7 +68,7 @@ public class EventService {
         event.setDateFin(updatedEvent.getDateFin());
         event.setVille(updatedEvent.getVille());
         event.setLieu(updatedEvent.getLieu());
-        event.setPrix(updatedEvent.getPrix());
+        event.setPrixUnitaire(updatedEvent.getPrixUnitaire());
         event.setCapaciteMax(updatedEvent.getCapaciteMax());
 
         return eventRepository.save(event);
@@ -80,7 +84,7 @@ public class EventService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable"));
 
-        if (!event.getCreateur().getId().equals(userId) && user.getRole() != Role.ADMIN) {
+        if (!event.getOrganisateur().getId().equals(userId) && user.getRole() != Role.ADMIN) {
             throw new IllegalArgumentException("Vous n'avez pas la permission de publier cet événement");
         }
 
@@ -90,7 +94,7 @@ public class EventService {
                 event.getDateFin() == null ||
                 event.getVille() == null ||
                 event.getLieu() == null ||
-                event.getPrix() < 0 ||
+                event.getPrixUnitaire() < 0 ||
                 event.getCapaciteMax() <= 0) {
             throw new IllegalArgumentException("Impossible de publier : informations manquantes");
         }
@@ -109,7 +113,7 @@ public class EventService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable"));
 
-        if (!event.getCreateur().getId().equals(userId) && user.getRole() != Role.ADMIN) {
+        if (!event.getOrganisateur().getId().equals(userId) && user.getRole() != Role.ADMIN) {
             throw new IllegalArgumentException("Vous n'avez pas la permission d'annuler cet événement");
         }
 
@@ -140,12 +144,20 @@ public class EventService {
             LocalDateTime end,
             Double prixMax
     ) {
-        return eventRepository.findAll().stream()
-                .filter(e -> ville == null || e.getVille().equalsIgnoreCase(ville))
+        // Utiliser les méthodes du repository pour une meilleure performance
+        List<Event> events;
+
+        if (ville != null && !ville.trim().isEmpty()) {
+            events = eventRepository.findByVilleIgnoreCase(ville.trim());
+        } else {
+            events = eventRepository.findAll();
+        }
+
+        return events.stream()
                 .filter(e -> categorie == null || e.getCategorie() == categorie)
                 .filter(e -> start == null || e.getDateDebut().isAfter(start))
                 .filter(e -> end == null || e.getDateDebut().isBefore(end))
-                .filter(e -> prixMax == null || e.getPrix() <= prixMax)
+                .filter(e -> prixMax == null || e.getPrixUnitaire() <= prixMax)
                 .filter(e -> e.getStatus() == EventStatus.PUBLIE)
                 .collect(Collectors.toList());
     }
@@ -156,10 +168,9 @@ public class EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new IllegalArgumentException("Événement introuvable"));
 
-        int reserved = event.getReservations().stream()
-                .filter(r -> r.getStatus() != ReservationStatus.ANNULEE)
-                .mapToInt(Reservation::getNbPlaces)
-                .sum();
+        // Calculer les places réservées avec statuts actifs (EN_ATTENTE, CONFIRMEE)
+        List<ReservationStatus> activeStatuses = Arrays.asList(ReservationStatus.EN_ATTENTE, ReservationStatus.CONFIRMEE);
+        int reserved = reservationRepository.sumPlacesByEventIdAndStatusIn(eventId, activeStatuses);
 
         return event.getCapaciteMax() - reserved;
     }
@@ -176,7 +187,7 @@ public class EventService {
     /* --------------------- STATISTIQUES ORGANISATEUR ------------------------ */
 
     public long countEventsByOrganizer(Long userId) {
-        return eventRepository.findByCreateurId(userId).size();
+        return eventRepository.findByOrganisateurId(userId).size();
     }
 
     /* --------------------- MARQUER LES ÉVÉNEMENTS TERMINÉS ------------------------ */

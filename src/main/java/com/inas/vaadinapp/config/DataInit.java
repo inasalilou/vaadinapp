@@ -43,11 +43,11 @@ public class DataInit {
         e1.setCategorie(Category.CONCERT);
         e1.setVille("Paris");
         e1.setLieu("Salle Olympia");
-        e1.setPrix(35.0);
+        e1.setPrixUnitaire(35.0);
         e1.setCapaciteMax(200);
         e1.setDateDebut(LocalDateTime.now().plusDays(5));
         e1.setDateFin(LocalDateTime.now().plusDays(5).plusHours(2));
-        e1.setCreateur(org);
+        e1.setOrganisateur(org);
         e1.setStatus(EventStatus.PUBLIE);
         eventRepository.save(e1);
 
@@ -58,11 +58,11 @@ public class DataInit {
         e2.setCategorie(Category.CONFERENCE);
         e2.setVille("Lyon");
         e2.setLieu("Centre des Congrès");
-        e2.setPrix(60.0);
+        e2.setPrixUnitaire(60.0);
         e2.setCapaciteMax(150);
         e2.setDateDebut(LocalDateTime.now().plusDays(10));
         e2.setDateFin(LocalDateTime.now().plusDays(10).plusHours(3));
-        e2.setCreateur(org);
+        e2.setOrganisateur(org);
         e2.setStatus(EventStatus.PUBLIE);
         eventRepository.save(e2);
 
@@ -73,11 +73,11 @@ public class DataInit {
         e3.setCategorie(Category.SPORT);
         e3.setVille("Marseille");
         e3.setLieu("Stade Vélodrome");
-        e3.setPrix(80.0);
+        e3.setPrixUnitaire(80.0);
         e3.setCapaciteMax(50000);
         e3.setDateDebut(LocalDateTime.now().plusDays(2));
         e3.setDateFin(LocalDateTime.now().plusDays(2).plusHours(2));
-        e3.setCreateur(org);
+        e3.setOrganisateur(org);
         e3.setStatus(EventStatus.PUBLIE);
         eventRepository.save(e3);
     }
