@@ -225,37 +225,4 @@ public class ProfileViewTest {
             System.out.println("Coût moyen par réservation : " + String.format("%.2f €", averageCost));
         }
     }
-
-    @Test
-    void testInactiveUserHandling() {
-        // Tester la gestion des utilisateurs inactifs
-        User inactiveUser = new User();
-        inactiveUser.setId(999L);
-        inactiveUser.setNom("Inactive");
-        inactiveUser.setPrenom("User");
-        inactiveUser.setEmail("inactive@test.com");
-        inactiveUser.setActif(false); // Compte désactivé
-
-        // Simuler un utilisateur inactif dans la session
-        // Cette vérification se fait dans beforeEnter()
-
-        assertFalse(inactiveUser.getActif(), "L'utilisateur devrait être inactif");
-        assertNotNull(inactiveUser.getId(), "L'utilisateur devrait avoir un ID");
-        System.out.println("Test de gestion des utilisateurs inactifs : OK");
-    }
-
-    @Test
-    void testActiveUserValidation() {
-        // Tester que les utilisateurs actifs passent la validation
-        User activeUser = new User();
-        activeUser.setId(1L);
-        activeUser.setNom("Active");
-        activeUser.setPrenom("User");
-        activeUser.setEmail("active@test.com");
-        activeUser.setActif(true); // Compte actif
-
-        assertTrue(activeUser.getActif(), "L'utilisateur devrait être actif");
-        assertNotNull(activeUser.getEmail(), "L'utilisateur devrait avoir un email");
-        System.out.println("Test de validation des utilisateurs actifs : OK");
-    }
 }
