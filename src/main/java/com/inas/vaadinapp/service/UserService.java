@@ -123,6 +123,20 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    /* ------------------- CHANGEMENT DE RÔLE ------------------- */
+    @Transactional
+    public User updateUserRole(Long userId, Role newRole) {
+        if (newRole == null) {
+            throw new IllegalArgumentException("Le rôle ne peut pas être nul");
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable"));
+
+        user.setRole(newRole);
+        return userRepository.save(user);
+    }
+
     /* ------------------- STATISTIQUES UTILISATEUR ------------------- */
 
     public UserStatistics getUserStatistics(Long userId) {
@@ -148,9 +162,13 @@ public class UserService {
         List<User> users;
 
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
-            // Recherche par nom ou prénom
-            users = userRepository.findByNomContainingIgnoreCaseOrPrenomContainingIgnoreCase(
-                searchTerm.trim(), searchTerm.trim());
+            // Recherche par nom, prénom ou email
+            String term = searchTerm.trim();
+            users = userRepository.findAll().stream()
+                    .filter(u -> u.getNom().toLowerCase().contains(term.toLowerCase())
+                            || u.getPrenom().toLowerCase().contains(term.toLowerCase())
+                            || u.getEmail().toLowerCase().contains(term.toLowerCase()))
+                    .toList();
         } else {
             // Tous les utilisateurs
             users = userRepository.findAll();

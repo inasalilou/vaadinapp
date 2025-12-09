@@ -190,6 +190,53 @@ public class EventService {
         return eventRepository.findByOrganisateurId(userId).size();
     }
 
+    public long countEventsByOrganizerAndStatus(Long userId, EventStatus status) {
+        return eventRepository.findByOrganisateurIdAndStatus(userId, status).size();
+    }
+
+    public List<Event> getRecentEventsByOrganizer(Long userId, int limit) {
+        return eventRepository.findByOrganisateurId(userId).stream()
+                .sorted((e1, e2) -> e2.getDateCreation().compareTo(e1.getDateCreation()))
+                .limit(limit)
+                .collect(Collectors.toList());
+    }
+
+    // Statistiques complètes pour un organisateur
+    public OrganizerStatistics getOrganizerStatistics(Long userId) {
+        long totalEvents = countEventsByOrganizer(userId);
+        long draftEvents = countEventsByOrganizerAndStatus(userId, EventStatus.BROUILLON);
+        long publishedEvents = countEventsByOrganizerAndStatus(userId, EventStatus.PUBLIE);
+        long cancelledEvents = countEventsByOrganizerAndStatus(userId, EventStatus.ANNULE);
+        long finishedEvents = countEventsByOrganizerAndStatus(userId, EventStatus.TERMINE);
+
+        return new OrganizerStatistics(totalEvents, draftEvents, publishedEvents, cancelledEvents, finishedEvents);
+    }
+
+    // Classe interne pour les statistiques organisateur
+    public static class OrganizerStatistics {
+        private final long totalEvents;
+        private final long draftEvents;
+        private final long publishedEvents;
+        private final long cancelledEvents;
+        private final long finishedEvents;
+
+        public OrganizerStatistics(long totalEvents, long draftEvents, long publishedEvents,
+                                 long cancelledEvents, long finishedEvents) {
+            this.totalEvents = totalEvents;
+            this.draftEvents = draftEvents;
+            this.publishedEvents = publishedEvents;
+            this.cancelledEvents = cancelledEvents;
+            this.finishedEvents = finishedEvents;
+        }
+
+        // Getters
+        public long getTotalEvents() { return totalEvents; }
+        public long getDraftEvents() { return draftEvents; }
+        public long getPublishedEvents() { return publishedEvents; }
+        public long getCancelledEvents() { return cancelledEvents; }
+        public long getFinishedEvents() { return finishedEvents; }
+    }
+
     /* --------------------- MARQUER LES ÉVÉNEMENTS TERMINÉS ------------------------ */
 
     public void updateFinishedEvents() {

@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 public class ReservationService {
@@ -103,6 +104,10 @@ public class ReservationService {
 
     public Optional<Reservation> findByCode(String code) {
         return reservationRepository.findByCodeReservation(code);
+    }
+
+    public List<Reservation> findAllReservations() {
+        return reservationRepository.findAll();
     }
 
     /* ================== ANNULATION ================== */
@@ -205,6 +210,65 @@ public class ReservationService {
                 currentMonthReservations);
     }
 
+    // Statistiques des réservations pour les événements d'un organisateur
+    public OrganizerReservationStatistics getOrganizerReservationStatistics(Long organizerId) {
+        // Obtenir tous les événements de l'organisateur
+        List<Event> organizerEvents = eventRepository.findByOrganisateurId(organizerId);
+        List<Long> eventIds = organizerEvents.stream()
+                .map(Event::getId)
+                .collect(Collectors.toList());
+
+        if (eventIds.isEmpty()) {
+            return new OrganizerReservationStatistics(0, 0, 0.0, 0.0, 0);
+        }
+
+        // Calculer les statistiques globales pour les événements de l'organisateur
+        List<ReservationStatus> activeStatuses = Arrays.asList(ReservationStatus.EN_ATTENTE, ReservationStatus.CONFIRMEE);
+
+        // Total des réservations pour tous les événements de l'organisateur
+        long totalReservations = eventIds.stream()
+                .mapToLong(eventId -> reservationRepository.findByEventId(eventId).size())
+                .sum();
+
+        // Réservations actives (EN_ATTENTE + CONFIRMEE)
+        long activeReservations = eventIds.stream()
+                .mapToLong(eventId -> reservationRepository.findByEventIdAndStatus(eventId, ReservationStatus.CONFIRMEE).size() +
+                                    reservationRepository.findByEventIdAndStatus(eventId, ReservationStatus.EN_ATTENTE).size())
+                .sum();
+
+        // Revenus totaux de toutes les réservations actives
+        double totalRevenue = eventIds.stream()
+                .mapToDouble(eventId -> {
+                    Double revenue = reservationRepository.sumMontantTotalByClientIdAndStatusIn(null, activeStatuses);
+                    return revenue != null ? revenue : 0.0;
+                })
+                .sum();
+
+        // Revenus du mois en cours
+        LocalDateTime startOfMonth = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfMonth = startOfMonth.plusMonths(1).minusNanos(1);
+
+        double currentMonthRevenue = organizerEvents.stream()
+                .mapToDouble(event -> {
+                    List<Reservation> monthReservations = reservationRepository.findByEventId(event.getId()).stream()
+                            .filter(r -> r.getDateReservation().isAfter(startOfMonth) && r.getDateReservation().isBefore(endOfMonth))
+                            .filter(r -> activeStatuses.contains(r.getStatus()))
+                            .collect(Collectors.toList());
+                    return monthReservations.stream().mapToDouble(Reservation::getMontantTotal).sum();
+                })
+                .sum();
+
+        // Places réservées au total
+        int totalPlacesReserved = eventIds.stream()
+                .mapToInt(eventId -> {
+                    Integer places = reservationRepository.sumPlacesByEventIdAndStatusIn(eventId, activeStatuses);
+                    return places != null ? places : 0;
+                })
+                .sum();
+
+        return new OrganizerReservationStatistics((int)totalReservations, (int)activeReservations, totalRevenue, currentMonthRevenue, totalPlacesReserved);
+    }
+
     /* ================== CLASSES INTERNES ================== */
 
     public static class ReservationSummary {
@@ -243,6 +307,31 @@ public class ReservationService {
         public ReservationStatus getStatus() { return status; }
         public String getCodeReservation() { return codeReservation; }
         public LocalDateTime getDateReservation() { return dateReservation; }
+    }
+
+    public static class OrganizerReservationStatistics {
+        private final int totalReservations;
+        private final int activeReservations;
+        private final double totalRevenue;
+        private final double currentMonthRevenue;
+        private final int totalPlacesReserved;
+
+        public OrganizerReservationStatistics(int totalReservations, int activeReservations,
+                                           double totalRevenue, double currentMonthRevenue,
+                                           int totalPlacesReserved) {
+            this.totalReservations = totalReservations;
+            this.activeReservations = activeReservations;
+            this.totalRevenue = totalRevenue;
+            this.currentMonthRevenue = currentMonthRevenue;
+            this.totalPlacesReserved = totalPlacesReserved;
+        }
+
+        // Getters
+        public int getTotalReservations() { return totalReservations; }
+        public int getActiveReservations() { return activeReservations; }
+        public double getTotalRevenue() { return totalRevenue; }
+        public double getCurrentMonthRevenue() { return currentMonthRevenue; }
+        public int getTotalPlacesReserved() { return totalPlacesReserved; }
     }
 
     public static class ReservationStatistics {
