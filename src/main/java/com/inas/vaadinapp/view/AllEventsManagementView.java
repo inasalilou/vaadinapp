@@ -23,11 +23,12 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
 
 @PageTitle("Gestion des événements - Admin")
 @Route("admin/events")
-public class AllEventsManagementView extends VerticalLayout {
+public class AllEventsManagementView extends VerticalLayout implements BeforeEnterObserver {
 
     private final EventService eventService;
     private ListDataProvider<Event> dataProvider;
@@ -54,22 +55,28 @@ public class AllEventsManagementView extends VerticalLayout {
     public AllEventsManagementView(EventService eventService) {
         this.eventService = eventService;
 
-        // Vérification ADMIN
-        User current = VaadinSession.getCurrent().getAttribute(User.class);
-        if (current == null || current.getRole() != Role.ADMIN) {
-            UI.getCurrent().navigate("login");
-            return;
-        }
-
         setSizeFull();
         setPadding(true);
         setSpacing(true);
         getStyle().set("background-color", "#f8f9fa");
+    }
 
-        createHeader();
-        createFilters();
-        createGrid();
-        loadEvents();
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        // Vérification ADMIN
+        User current = VaadinSession.getCurrent().getAttribute(User.class);
+        if (current == null || current.getRole() != Role.ADMIN) {
+            event.rerouteTo("login");
+            return;
+        }
+
+        // Construire la vue seulement si l'authentification est OK
+        if (getComponentCount() == 0) {
+            createHeader();
+            createFilters();
+            createGrid();
+            loadEvents();
+        }
     }
 
     private void createHeader() {

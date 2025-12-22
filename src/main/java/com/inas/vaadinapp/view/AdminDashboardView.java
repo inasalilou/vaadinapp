@@ -14,6 +14,8 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
@@ -26,7 +28,7 @@ import java.util.stream.Collectors;
 
 @PageTitle("Admin Dashboard - EventManager")
 @Route("admin/dashboard")
-public class AdminDashboardView extends VerticalLayout {
+public class AdminDashboardView extends VerticalLayout implements BeforeEnterObserver {
 
     private final UserService userService;
     private final EventService eventService;
@@ -43,24 +45,30 @@ public class AdminDashboardView extends VerticalLayout {
         this.eventService = eventService;
         this.reservationService = reservationService;
 
-        // Vérifier que l'utilisateur est un admin
-        User currentUser = VaadinSession.getCurrent().getAttribute(User.class);
-        if (currentUser == null) {
-            UI.getCurrent().navigate("login");
-            return;
-        }
-
-        if (currentUser.getRole() != Role.ADMIN) {
-            UI.getCurrent().navigate("dashboard");
-            return;
-        }
-
         setSizeFull();
         setPadding(true);
         setSpacing(true);
         getStyle().set("background-color", "#f8f9fa");
+    }
 
-        buildDashboard();
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        // Vérifier que l'utilisateur est un admin
+        User currentUser = VaadinSession.getCurrent().getAttribute(User.class);
+        if (currentUser == null) {
+            event.rerouteTo("login");
+            return;
+        }
+
+        if (currentUser.getRole() != Role.ADMIN) {
+            event.rerouteTo("dashboard");
+            return;
+        }
+
+        // Construire le dashboard seulement si l'authentification est OK
+        if (getComponentCount() == 0) {
+            buildDashboard();
+        }
     }
 
     private void buildDashboard() {

@@ -3,7 +3,6 @@ package com.inas.vaadinapp.view;
 import com.inas.vaadinapp.entity.Role;
 import com.inas.vaadinapp.entity.User;
 import com.inas.vaadinapp.service.UserService;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -19,6 +18,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
 
 @PageTitle("Gestion des utilisateurs - Admin")
 @Route("admin/users")
-public class UserManagementView extends VerticalLayout {
+public class UserManagementView extends VerticalLayout implements BeforeEnterObserver {
 
     private final UserService userService;
 
@@ -47,24 +48,29 @@ public class UserManagementView extends VerticalLayout {
     public UserManagementView(UserService userService) {
         this.userService = userService;
 
-        // Vérifier admin
-        var current = VaadinSession.getCurrent().getAttribute(User.class);
-        if (current == null || current.getRole() != Role.ADMIN) {
-            UI.getCurrent().navigate("login");
-            return;
-        }
-
         setSizeFull();
         setPadding(true);
         setSpacing(true);
         getStyle().set("background-color", "#f8f9fa");
+    }
 
-        createHeader();
-        createFilters();
-        createGrid();
-        createPaginationControls();
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        // Vérifier admin
+        var current = VaadinSession.getCurrent().getAttribute(User.class);
+        if (current == null || current.getRole() != Role.ADMIN) {
+            event.rerouteTo("login");
+            return;
+        }
 
-        loadData();
+        // Construire la vue seulement si l'authentification est OK
+        if (getComponentCount() == 0) {
+            createHeader();
+            createFilters();
+            createGrid();
+            createPaginationControls();
+            loadData();
+        }
     }
 
     private void createHeader() {

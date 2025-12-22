@@ -5,7 +5,6 @@ import com.inas.vaadinapp.entity.ReservationStatus;
 import com.inas.vaadinapp.entity.Role;
 import com.inas.vaadinapp.entity.User;
 import com.inas.vaadinapp.service.ReservationService;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -21,6 +20,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.provider.ListDataProvider;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.StreamResource;
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
 
 @PageTitle("Toutes les réservations - Admin")
 @Route("admin/reservations")
-public class AllReservationsView extends VerticalLayout {
+public class AllReservationsView extends VerticalLayout implements BeforeEnterObserver {
 
     private final ReservationService reservationService;
 
@@ -60,25 +61,30 @@ public class AllReservationsView extends VerticalLayout {
     public AllReservationsView(ReservationService reservationService) {
         this.reservationService = reservationService;
 
-        // Vérifier admin
-        var current = VaadinSession.getCurrent().getAttribute(User.class);
-        if (current == null || current.getRole() != Role.ADMIN) {
-            UI.getCurrent().navigate("login");
-            return;
-        }
-
         setSizeFull();
         setPadding(true);
         setSpacing(true);
         getStyle().set("background-color", "#f8f9fa");
+    }
 
-        createHeader();
-        createStats();
-        createFilters();
-        createGrid();
-        createActions();
+    @Override
+    public void beforeEnter(BeforeEnterEvent event) {
+        // Vérifier admin
+        var current = VaadinSession.getCurrent().getAttribute(User.class);
+        if (current == null || current.getRole() != Role.ADMIN) {
+            event.rerouteTo("login");
+            return;
+        }
 
-        loadData();
+        // Construire la vue seulement si l'authentification est OK
+        if (getComponentCount() == 0) {
+            createHeader();
+            createStats();
+            createFilters();
+            createGrid();
+            createActions();
+            loadData();
+        }
     }
 
     private void createHeader() {

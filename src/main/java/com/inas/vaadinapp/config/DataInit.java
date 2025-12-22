@@ -4,6 +4,8 @@ import com.inas.vaadinapp.entity.*;
 import com.inas.vaadinapp.repository.EventRepository;
 import com.inas.vaadinapp.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -13,28 +15,63 @@ public class DataInit {
 
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public DataInit(EventRepository eventRepository, UserRepository userRepository) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
     @PostConstruct
     public void init() {
 
-        // Empêche la duplication à chaque redémarrage
+        // --------- Création/Mise à jour des utilisateurs de test ----------
+        // On vérifie et crée/met à jour les utilisateurs même si des événements existent déjà
+        
+        // Admin user
+        User admin = userRepository.findByEmail("admin@test.com").orElse(new User());
+        admin.setNom("Admin");
+        admin.setPrenom("Super");
+        admin.setEmail("admin@test.com");
+        admin.setPassword(passwordEncoder.encode("admin123")); // Toujours re-hasher pour garantir la bonne valeur
+        admin.setRole(Role.ADMIN);
+        if (admin.getDateInscription() == null) {
+            admin.setDateInscription(LocalDateTime.now());
+        }
+        admin.setActif(true);
+        userRepository.save(admin);
+
+        // Organizer user
+        User org = userRepository.findByEmail("organizer@test.com").orElse(new User());
+        org.setNom("Organizer");
+        org.setPrenom("Event");
+        org.setEmail("organizer@test.com");
+        org.setPassword(passwordEncoder.encode("password123")); // Toujours re-hasher
+        org.setRole(Role.ORGANIZER);
+        if (org.getDateInscription() == null) {
+            org.setDateInscription(LocalDateTime.now());
+        }
+        org.setActif(true);
+        userRepository.save(org);
+
+        // Client user
+        User client = userRepository.findByEmail("client@test.com").orElse(new User());
+        client.setNom("Client");
+        client.setPrenom("Test");
+        client.setEmail("client@test.com");
+        client.setPassword(passwordEncoder.encode("password123")); // Toujours re-hasher
+        client.setRole(Role.CLIENT);
+        if (client.getDateInscription() == null) {
+            client.setDateInscription(LocalDateTime.now());
+        }
+        client.setActif(true);
+        userRepository.save(client);
+
+        // --------- Création des événements (seulement si aucun n'existe) ----------
         if (eventRepository.count() > 0) {
             return;
         }
-
-        // --------- Création d’un utilisateur ORGANIZER ----------
-        User org = new User();
-        org.setNom("Admin");
-        org.setPrenom("Event");
-        org.setEmail("organizer@test.com");
-        org.setPassword("password123");
-        org.setRole(Role.ORGANIZER);
-        userRepository.save(org);
 
         // --------- ÉVÉNEMENT 1 ----------
         Event e1 = new Event();
