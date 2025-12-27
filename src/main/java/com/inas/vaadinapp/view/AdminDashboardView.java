@@ -157,7 +157,7 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
         // Carte revenus
         totalRevenueCard = createStatsCard(
                 "💰 Revenus",
-                String.format("%.2f €", reservationStats.getTotalRevenue()),
+                String.format("%.2f dh", reservationStats.getTotalRevenue()),
                 "Revenus totaux générés"
         );
 
@@ -349,7 +349,7 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
             "✅ Confirmées: " + getReservationCountByStatus(ReservationStatus.CONFIRMEE),
             "❌ Annulées: " + getReservationCountByStatus(ReservationStatus.ANNULEE),
             "👥 Places réservées: " + stats.getTotalPlacesReserved(),
-            "💰 CA généré: " + String.format("%.2f €", stats.getTotalRevenue())
+            "💰 CA généré: " + String.format("%.2f dh", stats.getTotalRevenue())
         );
     }
 
@@ -363,9 +363,9 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
             "📊 Utilisateurs actifs: " + totalUsers,
             "🎪 Événements totaux: " + totalEvents,
             "🎫 Réservations totales: " + reservationStats.getTotalReservations(),
-            "💰 Revenus totaux: " + String.format("%.2f €", reservationStats.getTotalRevenue()),
+            "💰 Revenus totaux: " + String.format("%.2f dh", reservationStats.getTotalRevenue()),
             "📈 Événements/utilisateur: " + String.format("%.2f", (double) totalEvents / totalUsers),
-            "💵 Revenus/événement: " + String.format("%.2f €",
+            "💵 Revenus/événement: " + String.format("%.2f dh",
                 totalEvents > 0 ? reservationStats.getTotalRevenue() / totalEvents : 0)
         );
     }
@@ -488,10 +488,10 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
         ReservationService.OrganizerReservationStatistics stats = getGlobalReservationStats();
 
         return List.of(
-            "💰 Revenus totaux: " + String.format("%.2f €", stats.getTotalRevenue()),
-            "📈 Revenus ce mois: " + String.format("%.2f €", stats.getCurrentMonthRevenue()),
+            "💰 Revenus totaux: " + String.format("%.2f dh", stats.getTotalRevenue()),
+            "📈 Revenus ce mois: " + String.format("%.2f dh", stats.getCurrentMonthRevenue()),
             "👥 Places réservées: " + stats.getTotalPlacesReserved(),
-            "💵 Panier moyen: " + String.format("%.2f €",
+            "💵 Panier moyen: " + String.format("%.2f dh",
                 stats.getTotalReservations() > 0 ? stats.getTotalRevenue() / stats.getTotalReservations() : 0)
         );
     }

@@ -304,7 +304,7 @@ public class HomeView extends VerticalLayout {
         Span date = new Span("📅 " + event.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
         date.getStyle().set("color", "#666").set("font-size", "0.875rem");
 
-        Span price = new Span("💰 " + String.format("%.2f €", event.getPrixUnitaire()));
+        Span price = new Span("💰 " + String.format("%.2f dh", event.getPrixUnitaire()));
         price.getStyle()
                 .set("color", "#28a745")
                 .set("font-weight", "bold")
@@ -392,7 +392,7 @@ public class HomeView extends VerticalLayout {
         Span date = new Span("📅 " + event.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         date.getStyle().set("color", "#666").set("font-size", "0.8rem");
 
-        Span price = new Span("💰 " + String.format("%.2f €", event.getPrixUnitaire()));
+        Span price = new Span("💰 " + String.format("%.2f dh", event.getPrixUnitaire()));
         price.getStyle()
                 .set("color", "#28a745")
                 .set("font-weight", "bold")

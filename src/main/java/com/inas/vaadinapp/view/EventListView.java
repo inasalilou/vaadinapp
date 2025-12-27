@@ -1,8 +1,11 @@
 package com.inas.vaadinapp.view;
 
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.inas.vaadinapp.entity.Category;
 import com.inas.vaadinapp.entity.Event;
-import com.inas.vaadinapp.entity.EventStatus;
 import com.inas.vaadinapp.service.EventService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -26,12 +29,6 @@ import com.vaadin.flow.data.provider.ListDataProvider;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Route("events")
 @RouteAlias("events/list")
 public class EventListView extends VerticalLayout {
@@ -45,8 +42,8 @@ public class EventListView extends VerticalLayout {
     private final TextField villeField = new TextField("Ville");
     private final DatePicker dateMinField = new DatePicker("Date début");
     private final DatePicker dateMaxField = new DatePicker("Date fin");
-    private final NumberField prixMinField = new NumberField("Prix min (€)");
-    private final NumberField prixMaxField = new NumberField("Prix max (€)");
+    private final NumberField prixMinField = new NumberField("Prix min (dh)");
+    private final NumberField prixMaxField = new NumberField("Prix max (dh)");
     private final TextField keywordField = new TextField("Mot-clé");
 
     private MenuBar sortMenuBar;
@@ -180,7 +177,7 @@ public class EventListView extends VerticalLayout {
                 e.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
         ).setHeader("Date de début");
 
-        grid.addColumn(e -> String.format("%.2f €", e.getPrixUnitaire()))
+        grid.addColumn(e -> String.format("%.2f dh", e.getPrixUnitaire()))
                 .setHeader("Prix");
 
         grid.addColumn(e ->
@@ -210,8 +207,7 @@ public class EventListView extends VerticalLayout {
 
     private void loadEvents() {
         List<Event> events = eventService.findAll().stream()
-                .filter(e -> e.getStatus() == EventStatus.PUBLIE)
-                .collect(Collectors.toList());
+            .collect(Collectors.toList());
 
         dataProvider = new ListDataProvider<>(events);
         grid.setDataProvider(dataProvider);

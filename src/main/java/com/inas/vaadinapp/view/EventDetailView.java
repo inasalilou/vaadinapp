@@ -255,7 +255,7 @@ public class EventDetailView extends VerticalLayout implements BeforeEnterObserv
         Span priceLabel = new Span("Prix et disponibilité");
         priceLabel.getStyle().set("font-weight", "bold").set("color", "#333");
 
-        Span priceValue = new Span(String.format("%.2f € par personne", currentEvent.getPrixUnitaire()));
+        Span priceValue = new Span(String.format("%.2f dh par personne", currentEvent.getPrixUnitaire()));
         priceValue.getStyle().set("color", "#28a745").set("font-weight", "bold");
 
         Span placesValue = new Span(availablePlaces + " places disponibles sur " + currentEvent.getCapaciteMax());

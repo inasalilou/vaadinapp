@@ -199,7 +199,7 @@ All admin pages can be accessed directly via URL:
 3. **Organisateur**: Organizer email
 4. **Date début**: Start date and time
 5. **Statut**: Event status
-6. **Prix**: Unit price in €
+6. **Prix**: Unit price in dh
 7. **Ville**: City
 8. **Actions**: Action buttons
 
@@ -210,7 +210,7 @@ All admin pages can be accessed directly via URL:
 - **Mot-clé titre**: Search keyword in title
 - **Ville**: Filter by city
 - **Date début min/max**: Date range filter
-- **Prix min/max**: Price range filter (€)
+- **Prix min/max**: Price range filter (dh)
 - **Appliquer**: Apply filters
 - **Réinitialiser**: Clear all filters
 
@@ -240,7 +240,7 @@ All admin pages can be accessed directly via URL:
 4. **Événement**: Event title
 5. **Statut**: Reservation status
 6. **Places**: Number of places
-7. **Montant**: Total amount in €
+7. **Montant**: Total amount in dh
 8. **Date**: Reservation date and time
 9. **Actions**: Action buttons
 

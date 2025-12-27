@@ -87,7 +87,7 @@ public class ProfileIntegrationTest {
         System.out.println("📈 Statistiques utilisateur:");
         System.out.println("   - Événements créés: " + stats.getEventsCreated());
         System.out.println("   - Réservations: " + stats.getReservationsCount());
-        System.out.println("   - Dépenses totales: " + String.format("%.2f €", stats.getTotalSpent()));
+        System.out.println("   - Dépenses totales: " + String.format("%.2f dh", stats.getTotalSpent()));
 
         // === TEST 4: VALIDATION MOT DE PASSE ===
         System.out.println("🔐 Test de validation du mot de passe");
@@ -140,7 +140,7 @@ public class ProfileIntegrationTest {
 
         System.out.println("📊 Statistiques après réservation:");
         System.out.println("   - Réservations: " + stats.getReservationsCount());
-        System.out.println("   - Dépenses: " + String.format("%.2f €", stats.getTotalSpent()));
+        System.out.println("   - Dépenses: " + String.format("%.2f dh", stats.getTotalSpent()));
         System.out.println("✅ Fonctionnalités avec réservations validées");
     }
 }

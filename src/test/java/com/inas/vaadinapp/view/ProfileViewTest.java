@@ -222,7 +222,7 @@ public class ProfileViewTest {
         if (reservationsCount > 0) {
             double averageCost = totalSpent / reservationsCount;
             assertTrue(averageCost >= 0);
-            System.out.println("Coût moyen par réservation : " + String.format("%.2f €", averageCost));
+            System.out.println("Coût moyen par réservation : " + String.format("%.2f dh", averageCost));
         }
     }
 }

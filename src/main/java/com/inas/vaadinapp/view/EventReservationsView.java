@@ -201,7 +201,7 @@ public class EventReservationsView extends VerticalLayout implements HasUrlParam
         // Carte revenus totaux
         totalRevenueCard = createStatsCard(
                 "💰 Revenus totaux",
-                "0.00 €",
+                "0.00 dh",
                 "Montant total généré"
         );
 
@@ -315,12 +315,12 @@ public class EventReservationsView extends VerticalLayout implements HasUrlParam
                 .setSortable(true);
 
         // Prix unitaire
-        grid.addColumn(reservation -> String.format("%.2f €", reservation.getPrixUnitaire()))
+        grid.addColumn(reservation -> String.format("%.2f dh", reservation.getPrixUnitaire()))
                 .setHeader("Prix unitaire")
                 .setAutoWidth(true);
 
         // Montant total
-        grid.addColumn(reservation -> String.format("%.2f €", reservation.getMontantTotal()))
+        grid.addColumn(reservation -> String.format("%.2f dh", reservation.getMontantTotal()))
                 .setHeader("Total")
                 .setAutoWidth(true)
                 .setSortable(true);
@@ -424,7 +424,7 @@ public class EventReservationsView extends VerticalLayout implements HasUrlParam
         // Mettre à jour les cartes de statistiques
         updateStatsCard(totalReservationsCard, "🎫 Total réservations", String.valueOf(totalReservations), "Nombre total de réservations");
         updateStatsCard(totalPlacesCard, "👥 Places réservées", String.valueOf(totalPlaces), "Nombre total de places vendues");
-        updateStatsCard(totalRevenueCard, "💰 Revenus totaux", String.format("%.2f €", totalRevenue), "Montant total généré");
+        updateStatsCard(totalRevenueCard, "💰 Revenus totaux", String.format("%.2f dh", totalRevenue), "Montant total généré");
     }
 
     private void updateStatsCard(Div card, String title, String value, String subtitle) {
@@ -511,8 +511,8 @@ public class EventReservationsView extends VerticalLayout implements HasUrlParam
             "Email: %s\n" +
             "Événement: %s\n" +
             "Places: %d\n" +
-            "Prix unitaire: %.2f €\n" +
-            "Total: %.2f €\n" +
+            "Prix unitaire: %.2f dh\n" +
+            "Total: %.2f dh\n" +
             "Date: %s\n" +
             "Statut: %s",
             reservation.getCodeReservation(),

@@ -1,49 +1,65 @@
 package com.inas.vaadinapp.view;
 
-import com.inas.vaadinapp.entity.Event;
-import com.inas.vaadinapp.entity.User;
-import com.inas.vaadinapp.service.ReservationService;
-import com.inas.vaadinapp.service.UserService;
-import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.html.*;
-import com.vaadin.flow.component.icon.Icon;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.router.PageTitle;
-import com.vaadin.flow.router.Route;
-import com.vaadin.flow.server.VaadinSession;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.inas.vaadinapp.entity.Event;
+import com.inas.vaadinapp.entity.User;
+import com.inas.vaadinapp.service.ReservationService;
+import com.inas.vaadinapp.service.UserService;
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.H5;
+import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.Span;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
+import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.VaadinSession;
+
 @PageTitle("Dashboard - EventManager")
 @Route("dashboard")
-public class DashboardView extends VerticalLayout {
+public class DashboardView extends VerticalLayout implements BeforeEnterObserver {
 
     private final UserService userService;
     private final ReservationService reservationService;
+        private boolean dashboardBuilt = false;
 
     public DashboardView(UserService userService, ReservationService reservationService) {
         this.userService = userService;
         this.reservationService = reservationService;
 
-        // Vérifier si l'utilisateur est connecté
-        User currentUser = VaadinSession.getCurrent().getAttribute(User.class);
-        if (currentUser == null) {
-            UI.getCurrent().navigate("login");
-            return;
-        }
-
         setSizeFull();
         setPadding(false);
         setSpacing(false);
         getStyle().set("background-color", "#f8f9fa");
-
-        buildDashboard(currentUser);
     }
+
+        @Override
+        public void beforeEnter(BeforeEnterEvent event) {
+                // Verifier si l'utilisateur est connecte
+                User currentUser = VaadinSession.getCurrent().getAttribute(User.class);
+                if (currentUser == null) {
+                        event.rerouteTo("login");
+                        return;
+                }
+
+                if (!dashboardBuilt) {
+                        dashboardBuilt = true;
+                        buildDashboard(currentUser);
+                }
+        }
 
     private void buildDashboard(User user) {
         // Header avec bienvenue
@@ -105,7 +121,7 @@ public class DashboardView extends VerticalLayout {
         // Carte montant dépensé
         Div spentCard = createStatsCard(
                 "💰 Dépensé",
-                String.format("%.2f €", stats.getTotalSpent()),
+                String.format("%.2f dh", stats.getTotalSpent()),
                 "Montant total de vos réservations"
         );
 
@@ -222,7 +238,7 @@ public class DashboardView extends VerticalLayout {
         if (stats.getTotalSpent() > 0) {
             Div balanceNotification = createNotificationCard(
                     "Historique d'achats",
-                    "Vous avez dépensé " + String.format("%.2f €", stats.getTotalSpent()) + " en réservations.",
+                    "Vous avez dépensé " + String.format("%.2f dh", stats.getTotalSpent()) + " en réservations.",
                     VaadinIcon.EURO,
                     "#28a745"
             );
@@ -371,7 +387,7 @@ public class DashboardView extends VerticalLayout {
         eventInfo.setFlexGrow(1, eventTitle);
 
         // Prix
-        Span price = new Span(String.format("%.2f €", event.getPrixUnitaire()));
+        Span price = new Span(String.format("%.2f dh", event.getPrixUnitaire()));
         price.getStyle()
                 .set("color", "#28a745")
                 .set("font-weight", "bold")
@@ -427,8 +443,9 @@ public class DashboardView extends VerticalLayout {
         LocalDateTime nextWeek = now.plusDays(7);
 
         return reservationService.findByClient(user.getId()).stream()
-                .map(reservation -> reservation.getEvent())
-                .filter(event -> event.getDateDebut().isAfter(now) && event.getDateDebut().isBefore(nextWeek))
+                                .map(reservation -> reservation.getEvent())
+                                .filter(event -> event != null && event.getDateDebut() != null)
+                                .filter(event -> event.getDateDebut().isAfter(now) && event.getDateDebut().isBefore(nextWeek))
                 .distinct()
                 .sorted((e1, e2) -> e1.getDateDebut().compareTo(e2.getDateDebut()))
                 .collect(Collectors.toList());

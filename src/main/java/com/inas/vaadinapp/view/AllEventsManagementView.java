@@ -48,8 +48,8 @@ public class AllEventsManagementView extends VerticalLayout implements BeforeEnt
     private final TextField villeFilter = new TextField("Ville");
     private final DatePicker dateMinFilter = new DatePicker("Date début min");
     private final DatePicker dateMaxFilter = new DatePicker("Date début max");
-    private final NumberField prixMinFilter = new NumberField("Prix min (€)");
-    private final NumberField prixMaxFilter = new NumberField("Prix max (€)");
+    private final NumberField prixMinFilter = new NumberField("Prix min (dh)");
+    private final NumberField prixMaxFilter = new NumberField("Prix max (dh)");
     private final TextField keywordFilter = new TextField("Mot-clé titre");
 
     public AllEventsManagementView(EventService eventService) {
@@ -154,7 +154,7 @@ public class AllEventsManagementView extends VerticalLayout implements BeforeEnt
         grid.addColumn(e -> e.getDateDebut() != null ? e.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : "")
                 .setHeader("Date début").setSortable(true).setAutoWidth(true);
         grid.addColumn(e -> e.getStatus() != null ? e.getStatus().toString() : "").setHeader("Statut").setAutoWidth(true);
-        grid.addColumn(e -> String.format("%.2f €", e.getPrixUnitaire() != null ? e.getPrixUnitaire() : 0.0)).setHeader("Prix").setAutoWidth(true);
+        grid.addColumn(e -> String.format("%.2f dh", e.getPrixUnitaire() != null ? e.getPrixUnitaire() : 0.0)).setHeader("Prix").setAutoWidth(true);
         grid.addColumn(e -> e.getVille()).setHeader("Ville").setAutoWidth(true);
         grid.addComponentColumn(this::createActions).setHeader("Actions").setAutoWidth(true);
 

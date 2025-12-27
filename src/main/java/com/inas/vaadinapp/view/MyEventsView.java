@@ -179,7 +179,7 @@ public class MyEventsView extends VerticalLayout {
                 .setAutoWidth(true);
 
         // Prix
-        grid.addColumn(event -> String.format("%.2f €", event.getPrixUnitaire()))
+        grid.addColumn(event -> String.format("%.2f dh", event.getPrixUnitaire()))
                 .setHeader("Prix")
                 .setAutoWidth(true);
 

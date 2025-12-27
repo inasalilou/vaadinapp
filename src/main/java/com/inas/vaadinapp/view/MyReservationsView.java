@@ -192,7 +192,7 @@ public class MyReservationsView extends VerticalLayout {
                 .setAutoWidth(true);
 
         // Colonne Montant total
-        grid.addColumn(reservation -> String.format("%.2f €", reservation.getMontantTotal()))
+        grid.addColumn(reservation -> String.format("%.2f dh", reservation.getMontantTotal()))
                 .setHeader("Montant")
                 .setSortable(true)
                 .setAutoWidth(true);
@@ -398,7 +398,7 @@ public class MyReservationsView extends VerticalLayout {
             Span statsInfo = (Span) gridSection.getComponentAt(2);
             if (total > 0) {
                 statsInfo.setText(String.format(
-                        "Affichage de %d réservation(s) • En attente: %d • Confirmées: %d • Annulées: %d • Montant total: %.2f €",
+                        "Affichage de %d réservation(s) • En attente: %d • Confirmées: %d • Annulées: %d • Montant total: %.2f dh",
                         total, pending, confirmed, cancelled, totalAmount
                 ));
             } else {

@@ -471,7 +471,7 @@ public class ProfileView extends VerticalLayout implements BeforeEnterObserver {
             // Statistique 3: Dépenses totales
             Div spendingCard = createStatCard(
                     "Dépenses totales",
-                    String.format("%.2f €", stats.getTotalSpent()),
+                    String.format("%.2f dh", stats.getTotalSpent()),
                     "💰",
                     "Montant total dépensé sur la plateforme"
             );

@@ -54,7 +54,7 @@ public class EventFormView extends VerticalLayout implements HasUrlParameter<Str
     private final TextField villeField = new TextField("Ville");
     private final TextField lieuField = new TextField("Lieu");
     private final IntegerField capaciteField = new IntegerField("Capacité maximale");
-    private final NumberField prixField = new NumberField("Prix unitaire (€)");
+    private final NumberField prixField = new NumberField("Prix unitaire (dh)");
     private final TextField imageUrlField = new TextField("URL de l'image");
 
     // Upload d'image
@@ -542,7 +542,7 @@ public class EventFormView extends VerticalLayout implements HasUrlParameter<Str
         // Prix et capacité
         String priceText = "💰 ";
         if (prixField.getValue() != null) {
-            priceText += String.format("%.2f €", prixField.getValue());
+            priceText += String.format("%.2f dh", prixField.getValue());
         } else {
             priceText += "Prix à définir";
         }

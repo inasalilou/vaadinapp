@@ -1,5 +1,8 @@
 package com.inas.vaadinapp.view;
 
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
 import com.inas.vaadinapp.entity.Event;
 import com.inas.vaadinapp.entity.Reservation;
 import com.inas.vaadinapp.entity.User;
@@ -9,7 +12,13 @@ import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -21,9 +30,6 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-
-import java.time.format.DateTimeFormatter;
-import java.util.Optional;
 
 @Route("event/:eventId/reserve")
 public class ReservationFormView extends VerticalLayout implements BeforeEnterObserver {
@@ -197,7 +203,7 @@ public class ReservationFormView extends VerticalLayout implements BeforeEnterOb
         rightInfo.setSpacing(false);
         rightInfo.setPadding(false);
 
-        Span priceInfo = new Span("💰 " + String.format("%.2f €", currentEvent.getPrixUnitaire()) + " par personne");
+        Span priceInfo = new Span("💰 " + String.format("%.2f dh", currentEvent.getPrixUnitaire()) + " par personne");
         priceInfo.getStyle()
                 .set("font-weight", "bold")
                 .set("color", "#28a745")
@@ -265,7 +271,7 @@ public class ReservationFormView extends VerticalLayout implements BeforeEnterOb
         priceSection.setWidthFull();
 
         Span unitPriceLabel = new Span("Prix unitaire :");
-        priceInfo = new Span(String.format("%.2f €", currentEvent.getPrixUnitaire()));
+        priceInfo = new Span(String.format("%.2f dh", currentEvent.getPrixUnitaire()));
         priceInfo.getStyle()
                 .set("font-weight", "bold")
                 .set("color", "#666");
@@ -274,7 +280,7 @@ public class ReservationFormView extends VerticalLayout implements BeforeEnterOb
         multiplier.getStyle().set("color", "#999");
 
         Span placesCount = new Span("1 place(s) =");
-        totalInfo = new Span(String.format("%.2f €", currentEvent.getPrixUnitaire()));
+        totalInfo = new Span(String.format("%.2f dh", currentEvent.getPrixUnitaire()));
         totalInfo.getStyle()
                 .set("font-weight", "bold")
                 .set("color", "#28a745")
@@ -282,9 +288,8 @@ public class ReservationFormView extends VerticalLayout implements BeforeEnterOb
 
         priceSection.add(unitPriceLabel, priceInfo, multiplier, placesCount, totalInfo);
 
-        // Vérification de disponibilité
+        // Vérification de disponibilité (mise à jour après création des boutons)
         availabilityInfo = new Span();
-        updateAvailabilityInfo(1);
 
         placesSection.add(nbPlacesField, priceSection, availabilityInfo);
 
@@ -294,7 +299,7 @@ public class ReservationFormView extends VerticalLayout implements BeforeEnterOb
             if (places != null && places >= 1 && places <= 10) {
                 double total = places * currentEvent.getPrixUnitaire();
                 placesCount.setText(places + " place(s) =");
-                totalInfo.setText(String.format("%.2f €", total));
+                totalInfo.setText(String.format("%.2f dh", total));
                 updateAvailabilityInfo(places);
             }
         });
@@ -318,6 +323,9 @@ public class ReservationFormView extends VerticalLayout implements BeforeEnterOb
         reserveBtn = new Button("Procéder à la réservation", new Icon(VaadinIcon.CALENDAR));
         reserveBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_LARGE);
         reserveBtn.addClickListener(e -> showConfirmationDialog());
+
+        // Vérification de disponibilité initiale (reserveBtn doit déjà exister)
+        updateAvailabilityInfo(1);
 
         buttonsLayout.add(cancelBtn, reserveBtn);
 
@@ -396,8 +404,8 @@ public class ReservationFormView extends VerticalLayout implements BeforeEnterOb
 
         // Détails de la réservation
         Span placesReserved = new Span("🎫 Places réservées : " + nbPlaces);
-        Span unitPrice = new Span("💰 Prix unitaire : " + String.format("%.2f €", currentEvent.getPrixUnitaire()));
-        Span totalPrice = new Span("💵 Total : " + String.format("%.2f €", nbPlaces * currentEvent.getPrixUnitaire()));
+        Span unitPrice = new Span("💰 Prix unitaire : " + String.format("%.2f dh", currentEvent.getPrixUnitaire()));
+        Span totalPrice = new Span("💵 Total : " + String.format("%.2f dh", nbPlaces * currentEvent.getPrixUnitaire()));
 
         placesReserved.getStyle().set("font-weight", "bold");
         totalPrice.getStyle().set("font-weight", "bold").set("color", "#28a745").set("font-size", "1.1rem");

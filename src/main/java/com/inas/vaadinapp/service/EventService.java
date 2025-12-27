@@ -1,16 +1,22 @@
 package com.inas.vaadinapp.service;
 
-import com.inas.vaadinapp.entity.*;
-import com.inas.vaadinapp.repository.EventRepository;
-import com.inas.vaadinapp.repository.ReservationRepository;
-import com.inas.vaadinapp.repository.UserRepository;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.inas.vaadinapp.entity.Category;
+import com.inas.vaadinapp.entity.Event;
+import com.inas.vaadinapp.entity.EventStatus;
+import com.inas.vaadinapp.entity.ReservationStatus;
+import com.inas.vaadinapp.entity.Role;
+import com.inas.vaadinapp.entity.User;
+import com.inas.vaadinapp.repository.EventRepository;
+import com.inas.vaadinapp.repository.ReservationRepository;
+import com.inas.vaadinapp.repository.UserRepository;
 
 @Service
 public class EventService {
@@ -158,7 +164,6 @@ public class EventService {
                 .filter(e -> start == null || e.getDateDebut().isAfter(start))
                 .filter(e -> end == null || e.getDateDebut().isBefore(end))
                 .filter(e -> prixMax == null || e.getPrixUnitaire() <= prixMax)
-                .filter(e -> e.getStatus() == EventStatus.PUBLIE)
                 .collect(Collectors.toList());
     }
 

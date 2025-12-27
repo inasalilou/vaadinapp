@@ -104,7 +104,7 @@ public class AllReservationsView extends VerticalLayout implements BeforeEnterOb
         confirmedCard = createStatCard("✅ Confirmées", "0");
         pendingCard = createStatCard("⏳ En attente", "0");
         cancelledCard = createStatCard("❌ Annulées", "0");
-        revenueCard = createStatCard("💰 Revenus", "0.00 €");
+        revenueCard = createStatCard("💰 Revenus", "0.00 dh");
         placesCard = createStatCard("👥 Places réservées", "0");
 
         stats.add(totalCard, confirmedCard, pendingCard, cancelledCard, revenueCard, placesCard);
@@ -188,7 +188,7 @@ public class AllReservationsView extends VerticalLayout implements BeforeEnterOb
         grid.addColumn(r -> r.getStatus() != null ? r.getStatus().toString() : "")
                 .setHeader("Statut").setAutoWidth(true);
         grid.addColumn(Reservation::getNbPlaces).setHeader("Places").setSortable(true).setAutoWidth(true);
-        grid.addColumn(r -> String.format("%.2f €", r.getMontantTotal())).setHeader("Montant").setSortable(true).setAutoWidth(true);
+        grid.addColumn(r -> String.format("%.2f dh", r.getMontantTotal())).setHeader("Montant").setSortable(true).setAutoWidth(true);
         grid.addColumn(r -> r.getDateReservation() != null ? r.getDateReservation().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) : "")
                 .setHeader("Date").setSortable(true).setAutoWidth(true);
 
@@ -249,7 +249,7 @@ public class AllReservationsView extends VerticalLayout implements BeforeEnterOb
         setCardValue(pendingCard, String.valueOf(pending));
         setCardValue(cancelledCard, String.valueOf(cancelled));
         setCardValue(placesCard, String.valueOf(places));
-        setCardValue(revenueCard, String.format("%.2f €", revenue));
+        setCardValue(revenueCard, String.format("%.2f dh", revenue));
     }
 
     private void setCardValue(Div card, String value) {
@@ -328,7 +328,7 @@ public class AllReservationsView extends VerticalLayout implements BeforeEnterOb
         content.add(new Span("Événement : " + (reservation.getEvent() != null ? reservation.getEvent().getTitre() : "N/A")));
         content.add(new Span("Statut : " + reservation.getStatus()));
         content.add(new Span("Places : " + reservation.getNbPlaces()));
-        content.add(new Span("Montant : " + String.format("%.2f €", reservation.getMontantTotal())));
+        content.add(new Span("Montant : " + String.format("%.2f dh", reservation.getMontantTotal())));
         content.add(new Span("Date : " + (reservation.getDateReservation() != null
                 ? reservation.getDateReservation().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
                 : "N/A")));

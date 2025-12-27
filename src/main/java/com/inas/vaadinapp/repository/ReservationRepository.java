@@ -1,14 +1,16 @@
 package com.inas.vaadinapp.repository;
 
-import com.inas.vaadinapp.entity.Reservation;
-import com.inas.vaadinapp.entity.ReservationStatus;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import com.inas.vaadinapp.entity.Reservation;
+import com.inas.vaadinapp.entity.ReservationStatus;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
@@ -16,6 +18,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     Optional<Reservation> findByCodeReservation(String codeReservation);
 
+    @EntityGraph(attributePaths = "event")
     List<Reservation> findByClientId(Long userId);
 
     List<Reservation> findByEventId(Long eventId);

@@ -128,14 +128,14 @@ public class OrganizerDashboardView extends VerticalLayout {
         // Carte revenu total
         Div totalRevenueCard = createStatsCard(
                 "💰 Revenus totaux",
-                String.format("%.2f €", reservationStats.getTotalRevenue()),
+                String.format("%.2f dh", reservationStats.getTotalRevenue()),
                 "Gains générés par vos événements"
         );
 
         // Carte revenu du mois
         Div monthRevenueCard = createStatsCard(
                 "📈 Revenus ce mois",
-                String.format("%.2f €", reservationStats.getCurrentMonthRevenue()),
+                String.format("%.2f dh", reservationStats.getCurrentMonthRevenue()),
                 "Revenus du mois en cours"
         );
 
@@ -442,7 +442,7 @@ public class OrganizerDashboardView extends VerticalLayout {
         eventInfo.setFlexGrow(1, eventTitle);
 
         // Prix
-        Span price = new Span(String.format("%.2f €", event.getPrixUnitaire()));
+        Span price = new Span(String.format("%.2f dh", event.getPrixUnitaire()));
         price.getStyle()
                 .set("color", "#28a745")
                 .set("font-weight", "bold")
