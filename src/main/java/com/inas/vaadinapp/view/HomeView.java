@@ -115,7 +115,7 @@ public class HomeView extends VerticalLayout {
                 .set("position", "relative")
                 .set("z-index", "1");
 
-        H2 featuredTitle = new H2("🌟 Événements à la une");
+        H2 featuredTitle = new H2(" Événements à la une");
         featuredTitle.getStyle()
                 .set("text-align", "center")
                 .set("color", "#333")
@@ -137,7 +137,7 @@ public class HomeView extends VerticalLayout {
         searchSection.setSpacing(true);
         searchSection.getStyle().set("background-color", "#f8f9fa");
 
-        H3 searchTitle = new H3("🔍 Rechercher des événements");
+        H3 searchTitle = new H3(" Rechercher des événements");
         searchTitle.getStyle()
                 .set("text-align", "center")
                 .set("color", "#333")
@@ -176,7 +176,7 @@ public class HomeView extends VerticalLayout {
         eventsSection.setPadding(true);
         eventsSection.setSpacing(true);
 
-        H2 eventsTitle = new H2("📅 Tous les événements");
+        H2 eventsTitle = new H2(" Tous les événements");
         eventsTitle.getStyle()
                 .set("text-align", "center")
                 .set("color", "#333")
@@ -298,19 +298,19 @@ public class HomeView extends VerticalLayout {
                 .set("font-weight", "bold")
                 .set("font-size", "0.875rem");
 
-        Span location = new Span("📍 " + event.getVille());
+        Span location = new Span(" " + event.getVille());
         location.getStyle().set("color", "#666").set("font-size", "0.875rem");
 
-        Span date = new Span("📅 " + event.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+        Span date = new Span(" " + event.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
         date.getStyle().set("color", "#666").set("font-size", "0.875rem");
 
-        Span price = new Span("💰 " + String.format("%.2f dh", event.getPrixUnitaire()));
+        Span price = new Span(" " + String.format("%.2f dh", event.getPrixUnitaire()));
         price.getStyle()
                 .set("color", "#28a745")
                 .set("font-weight", "bold")
                 .set("font-size", "1.1rem");
 
-        Span popularBadge = new Span("⭐ Populaire");
+        Span popularBadge = new Span(" Populaire");
         popularBadge.getStyle()
                 .set("background-color", "#ffc107")
                 .set("color", "#000")
@@ -383,16 +383,16 @@ public class HomeView extends VerticalLayout {
                 .set("font-weight", "bold")
                 .set("font-size", "0.8rem");
 
-        Span location = new Span("📍 " + event.getVille());
+        Span location = new Span(" " + event.getVille());
         location.getStyle().set("color", "#666").set("font-size", "0.8rem");
 
         details.add(category, location);
         details.setFlexGrow(1, location);
 
-        Span date = new Span("📅 " + event.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        Span date = new Span(" " + event.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         date.getStyle().set("color", "#666").set("font-size", "0.8rem");
 
-        Span price = new Span("💰 " + String.format("%.2f dh", event.getPrixUnitaire()));
+        Span price = new Span(" " + String.format("%.2f dh", event.getPrixUnitaire()));
         price.getStyle()
                 .set("color", "#28a745")
                 .set("font-weight", "bold")

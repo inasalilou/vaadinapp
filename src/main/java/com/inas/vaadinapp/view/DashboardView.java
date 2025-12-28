@@ -20,6 +20,7 @@ import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -68,22 +69,26 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
         header.setSpacing(false);
         header.setWidthFull();
         header.setHeight("200px");
+        header.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
+        header.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         header.getStyle()
                 .set("background", "linear-gradient(135deg, #667eea 0%, #764ba2 100%)")
                 .set("color", "white")
                 .set("border-radius", "0 0 16px 16px");
 
-        H1 welcomeTitle = new H1("Bonjour, " + user.getPrenom() + " 👋");
+        H1 welcomeTitle = new H1("Bonjour, " + user.getPrenom() + " ");
         welcomeTitle.getStyle()
                 .set("text-align", "center")
-                .set("margin", "2rem 0 0.5rem 0")
+                .set("margin", "0")
                 .set("font-size", "2.5rem");
+        welcomeTitle.setWidthFull();
 
         Paragraph welcomeSubtitle = new Paragraph("Bienvenue sur votre tableau de bord EventManager");
         welcomeSubtitle.getStyle()
                 .set("text-align", "center")
-                .set("margin", "0")
+                .set("margin", "0.25rem 0 0 0")
                 .set("opacity", "0.9");
+        welcomeSubtitle.setWidthFull();
 
         header.add(welcomeTitle, welcomeSubtitle);
 
@@ -92,9 +97,9 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
         statsSection.setPadding(true);
         statsSection.setSpacing(true);
         statsSection.setWidthFull();
-        statsSection.getStyle().set("margin-top", "-2rem").set("position", "relative").set("z-index", "1");
+        statsSection.getStyle().set("margin-top", "1rem");
 
-        H2 statsTitle = new H2("📊 Vos statistiques");
+        H2 statsTitle = new H2(" Vos statistiques");
         statsTitle.getStyle().set("text-align", "center").set("color", "#333").set("margin-bottom", "1rem");
 
         // Récupération des statistiques
@@ -106,21 +111,21 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
 
         // Carte réservations
         Div reservationsCard = createStatsCard(
-                "🎫 Réservations",
+                " Réservations",
                 String.valueOf(stats.getReservationsCount()),
                 "Total de vos réservations"
         );
 
         // Carte événements organisés (si organisateur)
         Div eventsCard = createStatsCard(
-                "📅 Événements organisés",
+                " Événements organisés",
                 String.valueOf(stats.getEventsCreated()),
                 "Événements que vous avez créés"
         );
 
         // Carte montant dépensé
         Div spentCard = createStatsCard(
-                "💰 Dépensé",
+                " Dépensé",
                 String.format("%.2f dh", stats.getTotalSpent()),
                 "Montant total de vos réservations"
         );
@@ -134,7 +139,7 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
         upcomingSection.setSpacing(true);
         upcomingSection.setWidthFull();
 
-        H2 upcomingTitle = new H2("📅 Événements à venir");
+        H2 upcomingTitle = new H2(" Événements à venir");
         upcomingTitle.getStyle().set("text-align", "center").set("color", "#333").set("margin-bottom", "1rem");
 
         List<Event> upcomingEvents = getUpcomingEvents(user);
@@ -160,7 +165,7 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
         shortcutsSection.setSpacing(true);
         shortcutsSection.setWidthFull();
 
-        H2 shortcutsTitle = new H2("🚀 Actions rapides");
+        H2 shortcutsTitle = new H2(" Actions rapides");
         shortcutsTitle.getStyle().set("text-align", "center").set("color", "#333").set("margin-bottom", "1rem");
 
         HorizontalLayout shortcutsGrid = new HorizontalLayout();
@@ -185,7 +190,7 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
                 () -> UI.getCurrent().navigate("my-reservations")
         );
 
-        // Raccourci profil (✅ corrigé ici)
+        // Raccourci profil ( corrigé ici)
         Div profileShortcut = createShortcutCard(
                 "Mon profil",
                 "Modifiez vos informations personnelles",
@@ -216,7 +221,7 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
         notificationsSection.setSpacing(true);
         notificationsSection.setWidthFull();
 
-        H2 notificationsTitle = new H2("🔔 Notifications");
+        H2 notificationsTitle = new H2(" Notifications");
         notificationsTitle.getStyle().set("text-align", "center").set("color", "#333").set("margin-bottom", "1rem");
 
         VerticalLayout notificationsList = new VerticalLayout();
@@ -377,10 +382,10 @@ public class DashboardView extends VerticalLayout implements BeforeEnterObserver
                 .set("margin", "0 0 0.25rem 0")
                 .set("color", "#333");
 
-        Span eventDate = new Span("📅 " + event.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+        Span eventDate = new Span(" " + event.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
         eventDate.getStyle().set("color", "#666").set("font-size", "0.9rem");
 
-        Span eventLocation = new Span("📍 " + event.getVille());
+        Span eventLocation = new Span(" " + event.getVille());
         eventLocation.getStyle().set("color", "#666").set("font-size", "0.9rem");
 
         eventInfo.add(eventTitle, eventDate, eventLocation);

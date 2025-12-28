@@ -126,7 +126,7 @@ public class ReservationFormView extends VerticalLayout implements BeforeEnterOb
         navBar.setJustifyContentMode(JustifyContentMode.BETWEEN);
         navBar.setAlignItems(Alignment.CENTER);
 
-        Button backBtn = new Button("← Retour à l'événement", new Icon(VaadinIcon.ARROW_LEFT));
+        Button backBtn = new Button(" Retour à l'événement", new Icon(VaadinIcon.ARROW_LEFT));
         backBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         backBtn.addClickListener(e -> UI.getCurrent().navigate("event/" + currentEvent.getId()));
 
@@ -173,7 +173,7 @@ public class ReservationFormView extends VerticalLayout implements BeforeEnterOb
                 .set("margin", "0")
                 .set("color", "#333");
 
-        Span statusBadge = new Span("📅 " + currentEvent.getStatus().toString());
+        Span statusBadge = new Span(" " + currentEvent.getStatus().toString());
         statusBadge.getStyle()
                 .set("background-color", "#28a745")
                 .set("color", "white")
@@ -193,9 +193,9 @@ public class ReservationFormView extends VerticalLayout implements BeforeEnterOb
         leftInfo.setSpacing(false);
         leftInfo.setPadding(false);
 
-        Span dateInfo = new Span("📅 " + currentEvent.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
-        Span locationInfo = new Span("📍 " + currentEvent.getLieu() + ", " + currentEvent.getVille());
-        Span categoryInfo = new Span("🏷️ " + currentEvent.getCategorie().toString());
+        Span dateInfo = new Span(" " + currentEvent.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+        Span locationInfo = new Span(" " + currentEvent.getLieu() + ", " + currentEvent.getVille());
+        Span categoryInfo = new Span(" " + currentEvent.getCategorie().toString());
 
         leftInfo.add(dateInfo, locationInfo, categoryInfo);
 
@@ -203,7 +203,7 @@ public class ReservationFormView extends VerticalLayout implements BeforeEnterOb
         rightInfo.setSpacing(false);
         rightInfo.setPadding(false);
 
-        Span priceInfo = new Span("💰 " + String.format("%.2f dh", currentEvent.getPrixUnitaire()) + " par personne");
+        Span priceInfo = new Span(" " + String.format("%.2f dh", currentEvent.getPrixUnitaire()) + " par personne");
         priceInfo.getStyle()
                 .set("font-weight", "bold")
                 .set("color", "#28a745")
@@ -337,13 +337,13 @@ public class ReservationFormView extends VerticalLayout implements BeforeEnterOb
         int available = eventService.getAvailablePlaces(currentEvent.getId());
 
         if (available >= requestedPlaces) {
-            availabilityInfo.setText("✅ " + available + " places disponibles - Réservation possible");
+            availabilityInfo.setText(" " + available + " places disponibles - Réservation possible");
             availabilityInfo.getStyle()
                     .set("color", "#28a745")
                     .set("font-weight", "bold");
             reserveBtn.setEnabled(true);
         } else {
-            availabilityInfo.setText("❌ Seulement " + available + " places disponibles - Impossible de réserver " + requestedPlaces + " places");
+            availabilityInfo.setText(" Seulement " + available + " places disponibles - Impossible de réserver " + requestedPlaces + " places");
             availabilityInfo.getStyle()
                     .set("color", "#dc3545")
                     .set("font-weight", "bold");
@@ -398,14 +398,14 @@ public class ReservationFormView extends VerticalLayout implements BeforeEnterOb
                 .set("color", "#333");
 
         // Détails de l'événement
-        Span eventName = new Span("📅 Événement : " + currentEvent.getTitre());
-        Span eventDate = new Span("📆 Date : " + currentEvent.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy 'à' HH:mm")));
-        Span eventLocation = new Span("📍 Lieu : " + currentEvent.getLieu() + ", " + currentEvent.getVille());
+        Span eventName = new Span(" Événement : " + currentEvent.getTitre());
+        Span eventDate = new Span(" Date : " + currentEvent.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy 'à' HH:mm")));
+        Span eventLocation = new Span(" Lieu : " + currentEvent.getLieu() + ", " + currentEvent.getVille());
 
         // Détails de la réservation
-        Span placesReserved = new Span("🎫 Places réservées : " + nbPlaces);
-        Span unitPrice = new Span("💰 Prix unitaire : " + String.format("%.2f dh", currentEvent.getPrixUnitaire()));
-        Span totalPrice = new Span("💵 Total : " + String.format("%.2f dh", nbPlaces * currentEvent.getPrixUnitaire()));
+        Span placesReserved = new Span(" Places réservées : " + nbPlaces);
+        Span unitPrice = new Span(" Prix unitaire : " + String.format("%.2f dh", currentEvent.getPrixUnitaire()));
+        Span totalPrice = new Span(" Total : " + String.format("%.2f dh", nbPlaces * currentEvent.getPrixUnitaire()));
 
         placesReserved.getStyle().set("font-weight", "bold");
         totalPrice.getStyle().set("font-weight", "bold").set("color", "#28a745").set("font-size", "1.1rem");
@@ -413,7 +413,7 @@ public class ReservationFormView extends VerticalLayout implements BeforeEnterOb
         summaryContent.add(summaryTitle, eventName, eventDate, eventLocation, placesReserved, unitPrice, totalPrice);
 
         if (commentaire != null && !commentaire.trim().isEmpty()) {
-            Span commentInfo = new Span("💬 Commentaire : " + commentaire.trim());
+            Span commentInfo = new Span(" Commentaire : " + commentaire.trim());
             summaryContent.add(commentInfo);
         }
 
@@ -421,7 +421,7 @@ public class ReservationFormView extends VerticalLayout implements BeforeEnterOb
         dialogContent.add(summaryCard);
 
         // Avertissement
-        Paragraph warning = new Paragraph("⚠️ Cette réservation sera en attente de confirmation. Vous recevrez une confirmation par email.");
+        Paragraph warning = new Paragraph(" Cette réservation sera en attente de confirmation. Vous recevrez une confirmation par email.");
         warning.getStyle()
                 .set("color", "#856404")
                 .set("background-color", "#fff3cd")

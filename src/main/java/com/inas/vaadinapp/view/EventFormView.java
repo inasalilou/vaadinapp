@@ -312,7 +312,7 @@ public class EventFormView extends VerticalLayout implements HasUrlParameter<Str
                 .set("top", "20px")
                 .set("height", "fit-content");
 
-        H3 previewTitle = new H3("📋 Prévisualisation");
+        H3 previewTitle = new H3(" Prévisualisation");
         previewTitle.getStyle().set("text-align", "center").set("margin-bottom", "1rem");
 
         previewSection.add(previewTitle);
@@ -401,11 +401,11 @@ public class EventFormView extends VerticalLayout implements HasUrlParameter<Str
         formContainer.add(formLayout);
 
         // Boutons d'action
-        saveDraftBtn = new Button("💾 Sauvegarder en brouillon");
+        saveDraftBtn = new Button(" Sauvegarder en brouillon");
         saveDraftBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         saveDraftBtn.addClickListener(e -> saveAsDraft());
 
-        publishBtn = new Button("🚀 Publier l'événement");
+        publishBtn = new Button(" Publier l'événement");
         publishBtn.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_PRIMARY);
         publishBtn.addClickListener(e -> publishEvent());
 
@@ -489,7 +489,7 @@ public class EventFormView extends VerticalLayout implements HasUrlParameter<Str
     private void updatePreview() {
         previewSection.removeAll();
 
-        H3 previewTitle = new H3("📋 Prévisualisation");
+        H3 previewTitle = new H3(" Prévisualisation");
         previewTitle.getStyle().set("text-align", "center").set("margin-bottom", "1rem");
 
         previewSection.add(previewTitle);
@@ -512,12 +512,12 @@ public class EventFormView extends VerticalLayout implements HasUrlParameter<Str
         eventTitle.getStyle().set("margin", "0.5rem 0");
 
         // Catégorie
-        Span category = new Span("📂 " + (categorieField.getValue() != null ?
+        Span category = new Span(" " + (categorieField.getValue() != null ?
                 getCategoryLabel(categorieField.getValue()) : "Catégorie"));
         category.getStyle().set("color", "#666").set("font-size", "0.9rem");
 
         // Dates
-        String dateText = "📅 ";
+        String dateText = " ";
         if (dateDebutField.getValue() != null) {
             dateText += dateDebutField.getValue().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
             if (dateFinField.getValue() != null) {
@@ -530,7 +530,7 @@ public class EventFormView extends VerticalLayout implements HasUrlParameter<Str
         dates.getStyle().set("color", "#666").set("font-size", "0.9rem");
 
         // Lieu
-        String locationText = "📍 ";
+        String locationText = " ";
         if (villeField.getValue() != null && lieuField.getValue() != null) {
             locationText += lieuField.getValue() + ", " + villeField.getValue();
         } else {
@@ -540,14 +540,14 @@ public class EventFormView extends VerticalLayout implements HasUrlParameter<Str
         location.getStyle().set("color", "#666").set("font-size", "0.9rem");
 
         // Prix et capacité
-        String priceText = "💰 ";
+        String priceText = " ";
         if (prixField.getValue() != null) {
             priceText += String.format("%.2f dh", prixField.getValue());
         } else {
             priceText += "Prix à définir";
         }
 
-        String capacityText = "👥 ";
+        String capacityText = " ";
         if (capaciteField.getValue() != null) {
             capacityText += capaciteField.getValue() + " places";
         } else {

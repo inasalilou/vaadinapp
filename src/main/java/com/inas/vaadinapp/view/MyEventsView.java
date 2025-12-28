@@ -109,7 +109,7 @@ public class MyEventsView extends VerticalLayout {
                 .set("border-radius", "8px")
                 .set("box-shadow", "0 2px 4px rgba(0,0,0,0.1)");
 
-        H3 filtersTitle = new H3("🔍 Filtrer par statut");
+        H3 filtersTitle = new H3(" Filtrer par statut");
 
         statusFilter = new ComboBox<>("Statut");
         statusFilter.setItems(EventStatus.values());

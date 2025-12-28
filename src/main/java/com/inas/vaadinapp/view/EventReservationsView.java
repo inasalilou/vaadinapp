@@ -152,8 +152,8 @@ public class EventReservationsView extends VerticalLayout implements HasUrlParam
                 .set("text-align", "center");
 
         Span eventInfo = new Span(
-            "📅 " + currentEvent.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) +
-            " • 📍 " + currentEvent.getVille() + " • 👥 " + currentEvent.getCapaciteMax() + " places"
+            " " + currentEvent.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) +
+            "  " + currentEvent.getVille() + "  " + currentEvent.getCapaciteMax() + " places"
         );
         eventInfo.getStyle()
                 .set("color", "#666")
@@ -177,7 +177,7 @@ public class EventReservationsView extends VerticalLayout implements HasUrlParam
                 .set("border-radius", "8px")
                 .set("box-shadow", "0 2px 4px rgba(0,0,0,0.1)");
 
-        H2 statsTitle = new H2("📊 Statistiques des réservations");
+        H2 statsTitle = new H2(" Statistiques des réservations");
         statsTitle.getStyle().set("text-align", "center").set("margin-bottom", "1rem");
 
         HorizontalLayout statsCards = new HorizontalLayout();
@@ -186,21 +186,21 @@ public class EventReservationsView extends VerticalLayout implements HasUrlParam
 
         // Carte total réservations
         totalReservationsCard = createStatsCard(
-                "🎫 Total réservations",
+                " Total réservations",
                 "0",
                 "Nombre total de réservations"
         );
 
         // Carte places réservées
         totalPlacesCard = createStatsCard(
-                "👥 Places réservées",
+                " Places réservées",
                 "0",
                 "Nombre total de places vendues"
         );
 
         // Carte revenus totaux
         totalRevenueCard = createStatsCard(
-                "💰 Revenus totaux",
+                " Revenus totaux",
                 "0.00 dh",
                 "Montant total généré"
         );
@@ -220,7 +220,7 @@ public class EventReservationsView extends VerticalLayout implements HasUrlParam
                 .set("border-radius", "8px")
                 .set("box-shadow", "0 2px 4px rgba(0,0,0,0.1)");
 
-        H3 filtersTitle = new H3("🔍 Filtres et recherche");
+        H3 filtersTitle = new H3(" Filtres et recherche");
 
         HorizontalLayout filtersRow = new HorizontalLayout();
         filtersRow.setWidthFull();
@@ -275,7 +275,7 @@ public class EventReservationsView extends VerticalLayout implements HasUrlParam
         actionsLayout.setPadding(true);
         actionsLayout.setSpacing(true);
 
-        Button exportCsvBtn = new Button("📊 Exporter CSV", new Icon(VaadinIcon.DOWNLOAD));
+        Button exportCsvBtn = new Button(" Exporter CSV", new Icon(VaadinIcon.DOWNLOAD));
         exportCsvBtn.addThemeVariants(ButtonVariant.LUMO_SUCCESS);
         exportCsvBtn.addClickListener(e -> exportToCsv());
 
@@ -422,9 +422,9 @@ public class EventReservationsView extends VerticalLayout implements HasUrlParam
                 .sum();
 
         // Mettre à jour les cartes de statistiques
-        updateStatsCard(totalReservationsCard, "🎫 Total réservations", String.valueOf(totalReservations), "Nombre total de réservations");
-        updateStatsCard(totalPlacesCard, "👥 Places réservées", String.valueOf(totalPlaces), "Nombre total de places vendues");
-        updateStatsCard(totalRevenueCard, "💰 Revenus totaux", String.format("%.2f dh", totalRevenue), "Montant total généré");
+        updateStatsCard(totalReservationsCard, " Total réservations", String.valueOf(totalReservations), "Nombre total de réservations");
+        updateStatsCard(totalPlacesCard, " Places réservées", String.valueOf(totalPlaces), "Nombre total de places vendues");
+        updateStatsCard(totalRevenueCard, " Revenus totaux", String.format("%.2f dh", totalRevenue), "Montant total généré");
     }
 
     private void updateStatsCard(Div card, String title, String value, String subtitle) {

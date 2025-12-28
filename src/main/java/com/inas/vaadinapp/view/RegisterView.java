@@ -115,7 +115,7 @@ public class RegisterView extends VerticalLayout {
 
         passwordField.addValueChangeListener(e -> {
             if (e.getValue() != null && e.getValue().length() >= 8) {
-                passwordStrength.setText("✔ Mot de passe valide");
+                passwordStrength.setText(" Mot de passe valide");
             } else {
                 passwordStrength.setText("");
             }

@@ -11,6 +11,7 @@ import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
@@ -60,6 +61,8 @@ public class OrganizerDashboardView extends VerticalLayout {
         header.setSpacing(false);
         header.setWidthFull();
         header.setHeight("200px");
+                header.setDefaultHorizontalComponentAlignment(FlexComponent.Alignment.CENTER);
+                header.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
         header.getStyle()
                 .set("background", "linear-gradient(135deg, #764ba2 0%, #667eea 100%)")
                 .set("color", "white")
@@ -68,14 +71,16 @@ public class OrganizerDashboardView extends VerticalLayout {
         H1 welcomeTitle = new H1("Bonjour, " + user.getPrenom() + " 👋");
         welcomeTitle.getStyle()
                 .set("text-align", "center")
-                .set("margin", "2rem 0 0.5rem 0")
+                .set("margin", "0")
                 .set("font-size", "2.5rem");
+        welcomeTitle.setWidthFull();
 
         Paragraph welcomeSubtitle = new Paragraph("Bienvenue sur votre tableau de bord organisateur");
         welcomeSubtitle.getStyle()
                 .set("text-align", "center")
-                .set("margin", "0")
+                .set("margin", "0.25rem 0 0 0")
                 .set("opacity", "0.9");
+        welcomeSubtitle.setWidthFull();
 
         header.add(welcomeTitle, welcomeSubtitle);
 
@@ -84,9 +89,9 @@ public class OrganizerDashboardView extends VerticalLayout {
         statsSection.setPadding(true);
         statsSection.setSpacing(true);
         statsSection.setWidthFull();
-        statsSection.getStyle().set("margin-top", "-2rem").set("position", "relative").set("z-index", "1");
+        statsSection.getStyle().set("margin-top", "1rem");
 
-        H2 statsTitle = new H2("📊 Vos statistiques");
+        H2 statsTitle = new H2(" Vos statistiques");
         statsTitle.getStyle().set("text-align", "center").set("color", "#333").set("margin-bottom", "1rem");
 
         // Récupération des statistiques
@@ -99,21 +104,21 @@ public class OrganizerDashboardView extends VerticalLayout {
 
         // Carte événements totaux
         Div totalEventsCard = createStatsCard(
-                "🎪 Événements créés",
+                " Événements créés",
                 String.valueOf(eventStats.getTotalEvents()),
                 "Total de vos événements"
         );
 
         // Carte événements publiés
         Div publishedEventsCard = createStatsCard(
-                "📅 Événements publiés",
+                " Événements publiés",
                 String.valueOf(eventStats.getPublishedEvents()),
                 "Événements actifs"
         );
 
         // Carte réservations totales
         Div totalReservationsCard = createStatsCard(
-                "🎫 Réservations totales",
+                " Réservations totales",
                 String.valueOf(reservationStats.getTotalReservations()),
                 "Toutes les réservations reçues"
         );
@@ -127,21 +132,21 @@ public class OrganizerDashboardView extends VerticalLayout {
 
         // Carte revenu total
         Div totalRevenueCard = createStatsCard(
-                "💰 Revenus totaux",
+                " Revenus totaux",
                 String.format("%.2f dh", reservationStats.getTotalRevenue()),
                 "Gains générés par vos événements"
         );
 
         // Carte revenu du mois
         Div monthRevenueCard = createStatsCard(
-                "📈 Revenus ce mois",
+                " Revenus ce mois",
                 String.format("%.2f dh", reservationStats.getCurrentMonthRevenue()),
                 "Revenus du mois en cours"
         );
 
         // Carte places réservées
         Div placesReservedCard = createStatsCard(
-                "👥 Places réservées",
+                " Places réservées",
                 String.valueOf(reservationStats.getTotalPlacesReserved()),
                 "Nombre total de places vendues"
         );
@@ -156,7 +161,7 @@ public class OrganizerDashboardView extends VerticalLayout {
         statusSection.setSpacing(true);
         statusSection.setWidthFull();
 
-        H2 statusTitle = new H2("📋 Répartition par statut");
+        H2 statusTitle = new H2(" Répartition par statut");
         statusTitle.getStyle().set("text-align", "center").set("color", "#333").set("margin-bottom", "1rem");
 
         HorizontalLayout statusCards = new HorizontalLayout();
@@ -165,7 +170,7 @@ public class OrganizerDashboardView extends VerticalLayout {
 
         // Carte brouillons
         Div draftCard = createStatusCard(
-                "📝 Brouillons",
+                "Brouillons",
                 String.valueOf(eventStats.getDraftEvents()),
                 "Événements en préparation",
                 "#6c757d"
@@ -173,7 +178,7 @@ public class OrganizerDashboardView extends VerticalLayout {
 
         // Carte publiés
         Div publishedCard = createStatusCard(
-                "🟢 Publiés",
+                " Publiés",
                 String.valueOf(eventStats.getPublishedEvents()),
                 "Événements actifs et visibles",
                 "#28a745"
@@ -181,7 +186,7 @@ public class OrganizerDashboardView extends VerticalLayout {
 
         // Carte annulés
         Div cancelledCard = createStatusCard(
-                "🔴 Annulés",
+                " Annulés",
                 String.valueOf(eventStats.getCancelledEvents()),
                 "Événements annulés",
                 "#dc3545"
@@ -189,7 +194,7 @@ public class OrganizerDashboardView extends VerticalLayout {
 
         // Carte terminés
         Div finishedCard = createStatusCard(
-                "✅ Terminés",
+                " Terminés",
                 String.valueOf(eventStats.getFinishedEvents()),
                 "Événements passés",
                 "#17a2b8"
@@ -204,7 +209,7 @@ public class OrganizerDashboardView extends VerticalLayout {
         recentEventsSection.setSpacing(true);
         recentEventsSection.setWidthFull();
 
-        H2 recentTitle = new H2("🕒 Événements récents");
+        H2 recentTitle = new H2(" Événements récents");
         recentTitle.getStyle().set("text-align", "center").set("color", "#333").set("margin-bottom", "1rem");
 
         List<Event> recentEvents = eventService.getRecentEventsByOrganizer(user.getId(), 5);
@@ -230,7 +235,7 @@ public class OrganizerDashboardView extends VerticalLayout {
         shortcutsSection.setSpacing(true);
         shortcutsSection.setWidthFull();
 
-        H2 shortcutsTitle = new H2("🚀 Actions organisateur");
+        H2 shortcutsTitle = new H2(" Actions organisateur");
         shortcutsTitle.getStyle().set("text-align", "center").set("color", "#333").set("margin-bottom", "1rem");
 
         HorizontalLayout shortcutsGrid = new HorizontalLayout();
@@ -425,10 +430,10 @@ public class OrganizerDashboardView extends VerticalLayout {
                 .set("margin", "0 0 0.25rem 0")
                 .set("color", "#333");
 
-        Span eventDate = new Span("📅 " + event.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+        Span eventDate = new Span(" " + event.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
         eventDate.getStyle().set("color", "#666").set("font-size", "0.9rem");
 
-        Span eventLocation = new Span("📍 " + event.getVille());
+        Span eventLocation = new Span(" " + event.getVille());
         eventLocation.getStyle().set("color", "#666").set("font-size", "0.9rem");
 
         // Statut de l'événement

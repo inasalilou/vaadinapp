@@ -1,5 +1,9 @@
 package com.inas.vaadinapp.view;
 
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.inas.vaadinapp.entity.Role;
 import com.inas.vaadinapp.entity.User;
 import com.inas.vaadinapp.service.UserService;
@@ -23,10 +27,6 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @PageTitle("Gestion des utilisateurs - Admin")
 @Route("admin/users")

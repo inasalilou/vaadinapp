@@ -75,7 +75,7 @@ public class MyReservationsView extends VerticalLayout {
         navBar.setJustifyContentMode(JustifyContentMode.BETWEEN);
         navBar.setAlignItems(Alignment.CENTER);
 
-        Button backBtn = new Button("← Retour au tableau de bord", new Icon(VaadinIcon.ARROW_LEFT));
+        Button backBtn = new Button(" Retour au tableau de bord", new Icon(VaadinIcon.ARROW_LEFT));
         backBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         backBtn.addClickListener(e -> UI.getCurrent().navigate("dashboard"));
 
@@ -98,7 +98,7 @@ public class MyReservationsView extends VerticalLayout {
                 .set("margin", "1rem")
                 .set("box-shadow", "0 2px 4px rgba(0,0,0,0.1)");
 
-        H3 filtersTitle = new H3("🔍 Filtrer et rechercher");
+        H3 filtersTitle = new H3(" Filtrer et rechercher");
         filtersTitle.getStyle()
                 .set("margin-bottom", "1rem")
                 .set("color", "#333");
@@ -138,7 +138,7 @@ public class MyReservationsView extends VerticalLayout {
         gridSection.setSpacing(true);
         gridSection.setWidthFull();
 
-        H3 gridTitle = new H3("📋 Liste de vos réservations");
+        H3 gridTitle = new H3(" Liste de vos réservations");
         gridTitle.getStyle()
                 .set("margin-bottom", "1rem")
                 .set("color", "#333");

@@ -94,7 +94,7 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
         header.setSpacing(false);
         header.setAlignItems(Alignment.CENTER);
 
-        H1 title = new H1("🛡️ Administration - EventManager");
+        H1 title = new H1(" Administration - EventManager");
         title.getStyle()
                 .set("color", "#333")
                 .set("margin-bottom", "0.5rem")
@@ -122,7 +122,7 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
         statsSection.setSpacing(true);
         statsSection.setWidthFull();
 
-        H2 statsTitle = new H2("📊 Statistiques principales");
+        H2 statsTitle = new H2(" Statistiques principales");
         statsTitle.getStyle().set("text-align", "center").set("margin-bottom", "1rem");
 
         HorizontalLayout statsGrid = new HorizontalLayout();
@@ -135,28 +135,28 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
 
         // Carte utilisateurs
         totalUsersCard = createStatsCard(
-                "👥 Utilisateurs",
+                " Utilisateurs",
                 String.valueOf(allUsers.size()),
                 "Total des utilisateurs inscrits"
         );
 
         // Carte événements
         totalEventsCard = createStatsCard(
-                "📅 Événements",
+                " Événements",
                 String.valueOf(eventService.findAll().size()),
                 "Total des événements créés"
         );
 
         // Carte réservations
         totalReservationsCard = createStatsCard(
-                "🎫 Réservations",
+                " Réservations",
                 String.valueOf(reservationStats.getTotalReservations()),
                 "Total des réservations effectuées"
         );
 
         // Carte revenus
         totalRevenueCard = createStatsCard(
-                "💰 Revenus",
+                " Revenus",
                 String.format("%.2f dh", reservationStats.getTotalRevenue()),
                 "Revenus totaux générés"
         );
@@ -172,7 +172,7 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
         chartsSection.setSpacing(true);
         chartsSection.setWidthFull();
 
-        H2 chartsTitle = new H2("📈 Analyses détaillées");
+        H2 chartsTitle = new H2(" Analyses détaillées");
         chartsTitle.getStyle().set("text-align", "center").set("margin-bottom", "1rem");
 
         HorizontalLayout chartsGrid = new HorizontalLayout();
@@ -180,10 +180,10 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
         chartsGrid.setSpacing(true);
 
         // Tableaux de statistiques détaillées au lieu de graphiques
-        VerticalLayout usersStats = createStatsTable("👥 Utilisateurs par rôle", getUsersByRoleStats());
-        VerticalLayout eventsStats = createStatsTable("📅 Événements par statut", getEventsByStatusStats());
-        VerticalLayout reservationsStats = createStatsTable("🎫 Réservations par statut", getReservationsByStatusStats());
-        VerticalLayout revenueStats = createStatsTable("💰 Métriques financières", getRevenueStats());
+        VerticalLayout usersStats = createStatsTable(" Utilisateurs par rôle", getUsersByRoleStats());
+        VerticalLayout eventsStats = createStatsTable(" Événements par statut", getEventsByStatusStats());
+        VerticalLayout reservationsStats = createStatsTable(" Réservations par statut", getReservationsByStatusStats());
+        VerticalLayout revenueStats = createStatsTable(" Métriques financières", getRevenueStats());
 
         chartsGrid.add(usersStats, eventsStats, reservationsStats, revenueStats);
         chartsSection.add(chartsTitle, chartsGrid);
@@ -196,7 +196,7 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
         detailedSection.setSpacing(true);
         detailedSection.setWidthFull();
 
-        H2 detailedTitle = new H2("📋 Statistiques détaillées");
+        H2 detailedTitle = new H2(" Statistiques détaillées");
         detailedTitle.getStyle().set("text-align", "center").set("margin-bottom", "1rem");
 
         HorizontalLayout detailedGrid = new HorizontalLayout();
@@ -220,7 +220,7 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
         actionsSection.setSpacing(true);
         actionsSection.setWidthFull();
 
-        H2 actionsTitle = new H2("⚙️ Actions administratives");
+        H2 actionsTitle = new H2(" Actions administratives");
         actionsTitle.getStyle().set("text-align", "center").set("margin-bottom", "1rem");
 
         HorizontalLayout actionsGrid = new HorizontalLayout();
@@ -318,10 +318,10 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
                 .collect(Collectors.groupingBy(User::getRole, Collectors.counting()));
 
         return List.of(
-            "👑 Administrateurs: " + usersByRole.getOrDefault(Role.ADMIN, 0L),
-            "🎭 Organisateurs: " + usersByRole.getOrDefault(Role.ORGANIZER, 0L),
-            "👥 Clients: " + usersByRole.getOrDefault(Role.CLIENT, 0L),
-            "📊 Taux organisateurs: " + String.format("%.1f%%",
+            " Administrateurs: " + usersByRole.getOrDefault(Role.ADMIN, 0L),
+            " Organisateurs: " + usersByRole.getOrDefault(Role.ORGANIZER, 0L),
+            " Clients: " + usersByRole.getOrDefault(Role.CLIENT, 0L),
+            " Taux organisateurs: " + String.format("%.1f%%",
                 (double) usersByRole.getOrDefault(Role.ORGANIZER, 0L) / allUsers.size() * 100)
         );
     }
@@ -332,11 +332,11 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
 
         long totalEvents = eventService.findAll().size();
         return List.of(
-            "📝 Brouillons: " + eventsByStatus.getOrDefault(EventStatus.BROUILLON, 0L),
-            "🟢 Publiés: " + eventsByStatus.getOrDefault(EventStatus.PUBLIE, 0L),
-            "🔴 Annulés: " + eventsByStatus.getOrDefault(EventStatus.ANNULE, 0L),
-            "✅ Terminés: " + eventsByStatus.getOrDefault(EventStatus.TERMINE, 0L),
-            "📈 Taux de succès: " + String.format("%.1f%%",
+            " Brouillons: " + eventsByStatus.getOrDefault(EventStatus.BROUILLON, 0L),
+            " Publiés: " + eventsByStatus.getOrDefault(EventStatus.PUBLIE, 0L),
+            " Annulés: " + eventsByStatus.getOrDefault(EventStatus.ANNULE, 0L),
+            " Terminés: " + eventsByStatus.getOrDefault(EventStatus.TERMINE, 0L),
+            " Taux de succès: " + String.format("%.1f%%",
                 (double) eventsByStatus.getOrDefault(EventStatus.PUBLIE, 0L) / totalEvents * 100)
         );
     }
@@ -345,11 +345,11 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
         ReservationService.OrganizerReservationStatistics stats = getGlobalReservationStats();
 
         return List.of(
-            "⏳ En attente: " + getReservationCountByStatus(ReservationStatus.EN_ATTENTE),
-            "✅ Confirmées: " + getReservationCountByStatus(ReservationStatus.CONFIRMEE),
-            "❌ Annulées: " + getReservationCountByStatus(ReservationStatus.ANNULEE),
-            "👥 Places réservées: " + stats.getTotalPlacesReserved(),
-            "💰 CA généré: " + String.format("%.2f dh", stats.getTotalRevenue())
+            " En attente: " + getReservationCountByStatus(ReservationStatus.EN_ATTENTE),
+            " Confirmées: " + getReservationCountByStatus(ReservationStatus.CONFIRMEE),
+            " Annulées: " + getReservationCountByStatus(ReservationStatus.ANNULEE),
+            " Places réservées: " + stats.getTotalPlacesReserved(),
+            " CA généré: " + String.format("%.2f dh", stats.getTotalRevenue())
         );
     }
 
@@ -360,12 +360,12 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
         ReservationService.OrganizerReservationStatistics reservationStats = getGlobalReservationStats();
 
         return List.of(
-            "📊 Utilisateurs actifs: " + totalUsers,
-            "🎪 Événements totaux: " + totalEvents,
-            "🎫 Réservations totales: " + reservationStats.getTotalReservations(),
-            "💰 Revenus totaux: " + String.format("%.2f dh", reservationStats.getTotalRevenue()),
-            "📈 Événements/utilisateur: " + String.format("%.2f", (double) totalEvents / totalUsers),
-            "💵 Revenus/événement: " + String.format("%.2f dh",
+            " Utilisateurs actifs: " + totalUsers,
+            " Événements totaux: " + totalEvents,
+            " Réservations totales: " + reservationStats.getTotalReservations(),
+            " Revenus totaux: " + String.format("%.2f dh", reservationStats.getTotalRevenue()),
+            " Événements/utilisateur: " + String.format("%.2f", (double) totalEvents / totalUsers),
+            " Revenus/événement: " + String.format("%.2f dh",
                 totalEvents > 0 ? reservationStats.getTotalRevenue() / totalEvents : 0)
         );
     }
@@ -449,11 +449,11 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
         long totalUsers = allUsers.size();
 
         return List.of(
-            "👑 Administrateurs: " + usersByRole.getOrDefault(Role.ADMIN, 0L) +
+            " Administrateurs: " + usersByRole.getOrDefault(Role.ADMIN, 0L) +
                 " (" + String.format("%.1f%%", (double) usersByRole.getOrDefault(Role.ADMIN, 0L) / totalUsers * 100) + ")",
-            "🎭 Organisateurs: " + usersByRole.getOrDefault(Role.ORGANIZER, 0L) +
+            " Organisateurs: " + usersByRole.getOrDefault(Role.ORGANIZER, 0L) +
                 " (" + String.format("%.1f%%", (double) usersByRole.getOrDefault(Role.ORGANIZER, 0L) / totalUsers * 100) + ")",
-            "👥 Clients: " + usersByRole.getOrDefault(Role.CLIENT, 0L) +
+            " Clients: " + usersByRole.getOrDefault(Role.CLIENT, 0L) +
                 " (" + String.format("%.1f%%", (double) usersByRole.getOrDefault(Role.CLIENT, 0L) / totalUsers * 100) + ")"
         );
     }
@@ -464,23 +464,23 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
         long totalEvents = eventService.findAll().size();
 
         return List.of(
-            "📝 Brouillons: " + eventsByStatus.getOrDefault(EventStatus.BROUILLON, 0L) +
+            " Brouillons: " + eventsByStatus.getOrDefault(EventStatus.BROUILLON, 0L) +
                 " (" + String.format("%.1f%%", (double) eventsByStatus.getOrDefault(EventStatus.BROUILLON, 0L) / totalEvents * 100) + ")",
-            "🟢 Publiés: " + eventsByStatus.getOrDefault(EventStatus.PUBLIE, 0L) +
+            " Publiés: " + eventsByStatus.getOrDefault(EventStatus.PUBLIE, 0L) +
                 " (" + String.format("%.1f%%", (double) eventsByStatus.getOrDefault(EventStatus.PUBLIE, 0L) / totalEvents * 100) + ")",
-            "🔴 Annulés: " + eventsByStatus.getOrDefault(EventStatus.ANNULE, 0L) +
+            " Annulés: " + eventsByStatus.getOrDefault(EventStatus.ANNULE, 0L) +
                 " (" + String.format("%.1f%%", (double) eventsByStatus.getOrDefault(EventStatus.ANNULE, 0L) / totalEvents * 100) + ")",
-            "✅ Terminés: " + eventsByStatus.getOrDefault(EventStatus.TERMINE, 0L) +
+            " Terminés: " + eventsByStatus.getOrDefault(EventStatus.TERMINE, 0L) +
                 " (" + String.format("%.1f%%", (double) eventsByStatus.getOrDefault(EventStatus.TERMINE, 0L) / totalEvents * 100) + ")"
         );
     }
 
     private List<String> getReservationsByStatusStats() {
         return List.of(
-            "⏳ En attente: " + getReservationCountByStatus(ReservationStatus.EN_ATTENTE),
-            "✅ Confirmées: " + getReservationCountByStatus(ReservationStatus.CONFIRMEE),
-            "❌ Annulées: " + getReservationCountByStatus(ReservationStatus.ANNULEE),
-            "📊 Taux de confirmation: " + getConfirmationRate() + "%"
+            " En attente: " + getReservationCountByStatus(ReservationStatus.EN_ATTENTE),
+            " Confirmées: " + getReservationCountByStatus(ReservationStatus.CONFIRMEE),
+            " Annulées: " + getReservationCountByStatus(ReservationStatus.ANNULEE),
+            " Taux de confirmation: " + getConfirmationRate() + "%"
         );
     }
 
@@ -488,10 +488,10 @@ public class AdminDashboardView extends VerticalLayout implements BeforeEnterObs
         ReservationService.OrganizerReservationStatistics stats = getGlobalReservationStats();
 
         return List.of(
-            "💰 Revenus totaux: " + String.format("%.2f dh", stats.getTotalRevenue()),
-            "📈 Revenus ce mois: " + String.format("%.2f dh", stats.getCurrentMonthRevenue()),
-            "👥 Places réservées: " + stats.getTotalPlacesReserved(),
-            "💵 Panier moyen: " + String.format("%.2f dh",
+            " Revenus totaux: " + String.format("%.2f dh", stats.getTotalRevenue()),
+            " Revenus ce mois: " + String.format("%.2f dh", stats.getCurrentMonthRevenue()),
+            " Places réservées: " + stats.getTotalPlacesReserved(),
+            " Panier moyen: " + String.format("%.2f dh",
                 stats.getTotalReservations() > 0 ? stats.getTotalRevenue() / stats.getTotalReservations() : 0)
         );
     }

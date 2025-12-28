@@ -100,12 +100,12 @@ public class AllReservationsView extends VerticalLayout implements BeforeEnterOb
         stats.setWidthFull();
         stats.setSpacing(true);
 
-        totalCard = createStatCard("🎫 Total", "0");
-        confirmedCard = createStatCard("✅ Confirmées", "0");
-        pendingCard = createStatCard("⏳ En attente", "0");
-        cancelledCard = createStatCard("❌ Annulées", "0");
-        revenueCard = createStatCard("💰 Revenus", "0.00 dh");
-        placesCard = createStatCard("👥 Places réservées", "0");
+        totalCard = createStatCard(" Total", "0");
+        confirmedCard = createStatCard(" Confirmées", "0");
+        pendingCard = createStatCard(" En attente", "0");
+        cancelledCard = createStatCard(" Annulées", "0");
+        revenueCard = createStatCard(" Revenus", "0.00 dh");
+        placesCard = createStatCard(" Places réservées", "0");
 
         stats.add(totalCard, confirmedCard, pendingCard, cancelledCard, revenueCard, placesCard);
         add(stats);

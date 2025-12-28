@@ -83,7 +83,7 @@ public class EventDetailView extends VerticalLayout implements BeforeEnterObserv
         navBar.setJustifyContentMode(JustifyContentMode.BETWEEN);
         navBar.setAlignItems(Alignment.CENTER);
 
-        Button backBtn = new Button("← Retour aux événements", new Icon(VaadinIcon.ARROW_LEFT));
+        Button backBtn = new Button("Retour aux événements", new Icon(VaadinIcon.ARROW_LEFT));
         backBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         backBtn.addClickListener(e -> UI.getCurrent().navigate("events"));
 
@@ -299,7 +299,7 @@ public class EventDetailView extends VerticalLayout implements BeforeEnterObserv
             orgEmail.getStyle().set("color", "#666").set("font-size", "0.9rem");
 
             if (organizer.getTelephone() != null && !organizer.getTelephone().trim().isEmpty()) {
-                Span orgPhone = new Span("📞 " + organizer.getTelephone());
+                Span orgPhone = new Span("" + organizer.getTelephone());
                 orgPhone.getStyle().set("color", "#666").set("font-size", "0.9rem");
                 orgDetails.add(orgName, orgEmail, orgPhone);
             } else {

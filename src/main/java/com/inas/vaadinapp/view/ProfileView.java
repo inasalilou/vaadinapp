@@ -1,5 +1,7 @@
 package com.inas.vaadinapp.view;
 
+import java.time.format.DateTimeFormatter;
+
 import com.inas.vaadinapp.entity.User;
 import com.inas.vaadinapp.service.UserService;
 import com.vaadin.flow.component.UI;
@@ -7,7 +9,13 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -21,8 +29,6 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.VaadinSession;
-
-import java.time.format.DateTimeFormatter;
 
 @Route("profile")
 public class ProfileView extends VerticalLayout implements BeforeEnterObserver {
@@ -120,7 +126,7 @@ public class ProfileView extends VerticalLayout implements BeforeEnterObserver {
         navBar.setJustifyContentMode(JustifyContentMode.BETWEEN);
         navBar.setAlignItems(Alignment.CENTER);
 
-        Button backBtn = new Button("← Retour", new Icon(VaadinIcon.ARROW_LEFT));
+        Button backBtn = new Button(" Retour", new Icon(VaadinIcon.ARROW_LEFT));
         backBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         backBtn.addClickListener(e -> UI.getCurrent().navigate(""));
 
@@ -328,7 +334,7 @@ public class ProfileView extends VerticalLayout implements BeforeEnterObserver {
                 .set("padding", "1.5rem");
 
         Paragraph warning = new Paragraph(
-                "⚠️ La désactivation de votre compte est définitive. Vous ne pourrez plus accéder à vos réservations et événements créés."
+                " La désactivation de votre compte est définitive. Vous ne pourrez plus accéder à vos réservations et événements créés."
         );
         warning.getStyle()
                 .set("color", "#c53030")
@@ -456,7 +462,7 @@ public class ProfileView extends VerticalLayout implements BeforeEnterObserver {
             Div eventsCard = createStatCard(
                     "Événements créés",
                     String.valueOf(stats.getEventsCreated()),
-                    "🏛️",
+                    "📅",
                     "Nombre d'événements que vous avez organisés"
             );
 
@@ -563,7 +569,7 @@ public class ProfileView extends VerticalLayout implements BeforeEnterObserver {
                 .set("padding", "1rem")
                 .set("margin-bottom", "1rem");
 
-        H4 warningTitle = new H4("⚠️ Action irréversible");
+        H4 warningTitle = new H4(" Action irréversible");
         warningTitle.getStyle()
                 .set("color", "#c53030")
                 .set("margin", "0 0 0.5rem 0");
