@@ -171,42 +171,54 @@ public class EventFormView extends VerticalLayout implements HasUrlParameter<Str
         // Configuration des champs
         titreField.setRequired(true);
         titreField.setPlaceholder("Titre de votre événement");
+        titreField.setWidthFull();
 
         descriptionField.setPlaceholder("Description détaillée de l'événement...");
         descriptionField.setMaxLength(1000);
+        descriptionField.setWidthFull();
+        descriptionField.setMinHeight("140px");
 
         categorieField.setItems(Category.values());
         categorieField.setItemLabelGenerator(cat -> getCategoryLabel(cat));
         categorieField.setRequired(true);
+        categorieField.setWidthFull();
 
         dateDebutField.setRequiredIndicatorVisible(true);
         dateDebutField.setMin(LocalDateTime.now());
+        dateDebutField.setWidthFull();
 
         dateFinField.setRequiredIndicatorVisible(true);
+        dateFinField.setWidthFull();
 
         villeField.setRequired(true);
         villeField.setPlaceholder("Ex: Paris, Lyon, Marseille...");
+        villeField.setWidthFull();
 
         lieuField.setRequired(true);
         lieuField.setPlaceholder("Adresse complète du lieu");
+        lieuField.setWidthFull();
 
         capaciteField.setRequired(true);
         capaciteField.setMin(1);
         capaciteField.setMax(10000);
         capaciteField.setValue(100);
+        capaciteField.setWidthFull();
 
         prixField.setRequired(true);
         prixField.setMin(0.0);
         prixField.setStep(0.01);
         prixField.setValue(0.0);
+        prixField.setWidthFull();
 
         imageUrlField.setPlaceholder("https://exemple.com/image.jpg");
+        imageUrlField.setWidthFull();
 
         // Configuration upload image
         imageUpload.setAcceptedFileTypes("image/jpeg", "image/png", "image/gif", "image/webp");
         imageUpload.setMaxFiles(1);
         imageUpload.setDropLabel(new Span("Déposez une image ici ou cliquez pour sélectionner"));
         imageUpload.setUploadButton(new Button("Sélectionner une image"));
+        imageUpload.setWidthFull();
 
         imageUpload.addSucceededListener(event -> {
             String fileName = event.getFileName();
@@ -303,11 +315,14 @@ public class EventFormView extends VerticalLayout implements HasUrlParameter<Str
         previewSection = new VerticalLayout();
         previewSection.setPadding(true);
         previewSection.setSpacing(true);
-        previewSection.setWidth("400px");
+        // Responsive: pleine largeur sur petit écran, largeur max sur grand écran
+        previewSection.setWidthFull();
+        previewSection.setMaxWidth("420px");
         previewSection.getStyle()
                 .set("background", "white")
                 .set("border-radius", "8px")
                 .set("box-shadow", "0 2px 4px rgba(0,0,0,0.1)")
+            .set("flex", "1 1 320px")
                 .set("position", "sticky")
                 .set("top", "20px")
                 .set("height", "fit-content");
@@ -344,38 +359,41 @@ public class EventFormView extends VerticalLayout implements HasUrlParameter<Str
 
         // Formulaire principal
         FormLayout formLayout = new FormLayout();
+        formLayout.setWidthFull();
+        formLayout.getStyle()
+            .set("row-gap", "var(--lumo-space-m)")
+            .set("column-gap", "var(--lumo-space-l)");
         formLayout.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("0", 1),
                 new FormLayout.ResponsiveStep("500px", 2)
         );
 
-        formLayout.addFormItem(titreField, titreField.getLabel());
-        formLayout.addFormItem(categorieField, categorieField.getLabel());
-
-        HorizontalLayout datesLayout = new HorizontalLayout(dateDebutField, dateFinField);
-        datesLayout.setWidthFull();
-        formLayout.addFormItem(datesLayout, "Dates");
-
-        formLayout.addFormItem(villeField, villeField.getLabel());
-        formLayout.addFormItem(lieuField, lieuField.getLabel());
-        formLayout.addFormItem(capaciteField, capaciteField.getLabel());
-        formLayout.addFormItem(prixField, prixField.getLabel());
-
-        VerticalLayout descriptionLayout = new VerticalLayout();
-        descriptionLayout.add(descriptionField);
-        descriptionLayout.setWidthFull();
-        formLayout.addFormItem(descriptionLayout, descriptionField.getLabel());
+        // Ajouter directement les champs dans le FormLayout évite les labels dupliqués
+        // (le FormItem + le label du champ).
+        formLayout.add(
+            titreField,
+            categorieField,
+            dateDebutField,
+            dateFinField,
+            villeField,
+            lieuField,
+            capaciteField,
+            prixField,
+            descriptionField
+        );
+        formLayout.setColspan(descriptionField, 2);
 
         // Section image
         VerticalLayout imageSection = new VerticalLayout();
         imageSection.setSpacing(true);
         imageSection.setPadding(false);
+        imageSection.setWidthFull();
 
         H4 imageTitle = new H4("Image de l'événement");
         imageTitle.getStyle().set("margin", "0");
 
         VerticalLayout imageOptions = new VerticalLayout();
-        imageOptions.setSpacing(false);
+        imageOptions.setSpacing(true);
         imageOptions.setPadding(false);
 
         Span orText = new Span("OU");
@@ -387,7 +405,8 @@ public class EventFormView extends VerticalLayout implements HasUrlParameter<Str
         imageOptions.add(imageUpload, orText, imageUrlField);
         imageSection.add(imageTitle, imageOptions);
 
-        formLayout.addFormItem(imageSection, "Image");
+        formLayout.add(imageSection);
+        formLayout.setColspan(imageSection, 2);
 
         // Conteneur formulaire
         VerticalLayout formContainer = new VerticalLayout();
@@ -420,14 +439,22 @@ public class EventFormView extends VerticalLayout implements HasUrlParameter<Str
         HorizontalLayout mainLayout = new HorizontalLayout();
         mainLayout.setWidthFull();
         mainLayout.setSpacing(true);
+        mainLayout.setAlignItems(Alignment.START);
+        // Responsive: empiler (wrap) quand l'écran est étroit
+        mainLayout.getStyle().set("flex-wrap", "wrap");
 
         VerticalLayout leftSide = new VerticalLayout();
         leftSide.setWidthFull();
         leftSide.setPadding(false);
         leftSide.setSpacing(true);
+        leftSide.getStyle().set("flex", "2 1 520px");
         leftSide.add(formContainer, buttonsLayout);
 
         mainLayout.add(leftSide, previewSection);
+        mainLayout.setFlexGrow(1, leftSide);
+
+        // Boutons: permettre le retour à la ligne sur petit écran
+        buttonsLayout.getStyle().set("flex-wrap", "wrap");
 
         add(header, mainLayout);
     }

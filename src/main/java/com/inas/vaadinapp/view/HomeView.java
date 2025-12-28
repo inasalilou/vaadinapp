@@ -1,5 +1,10 @@
 package com.inas.vaadinapp.view;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 import com.inas.vaadinapp.entity.Category;
 import com.inas.vaadinapp.entity.Event;
 import com.inas.vaadinapp.service.EventService;
@@ -8,7 +13,13 @@ import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.datepicker.DatePicker;
-import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.H4;
+import com.vaadin.flow.component.html.Paragraph;
+import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -17,11 +28,6 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Route("")
 @RouteAlias("home")
@@ -257,7 +263,9 @@ public class HomeView extends VerticalLayout {
                 .set("width", "350px")
                 .set("border", "2px solid #667eea");
 
-        card.addClickListener(e -> UI.getCurrent().navigate("event/" + event.getId()));
+        if (event.getId() != null) {
+            card.addClickListener(e -> UI.getCurrent().navigate("event/" + event.getId()));
+        }
 
         // Hover effect
         card.getElement().addEventListener("mouseenter", e ->
@@ -286,25 +294,35 @@ public class HomeView extends VerticalLayout {
         content.setPadding(true);
         content.setSpacing(false);
 
-        H3 title = new H3(event.getTitre());
+        String titleText = event.getTitre() != null ? event.getTitre() : "(Sans titre)";
+        String categoryText = event.getCategorie() != null ? event.getCategorie().toString() : "Sans catégorie";
+        String cityText = event.getVille() != null ? event.getVille() : "Ville inconnue";
+        String dateText = event.getDateDebut() != null
+            ? event.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"))
+            : "Date à définir";
+        String priceText = event.getPrixUnitaire() != null
+            ? String.format("%.2f dh", event.getPrixUnitaire())
+            : "—";
+
+        H3 title = new H3(titleText);
         title.getStyle()
                 .set("margin", "0")
                 .set("font-size", "1.25rem")
                 .set("color", "#333");
 
-        Span category = new Span(event.getCategorie().toString());
+        Span category = new Span(categoryText);
         category.getStyle()
                 .set("color", "#667eea")
                 .set("font-weight", "bold")
                 .set("font-size", "0.875rem");
 
-        Span location = new Span(" " + event.getVille());
+        Span location = new Span(" " + cityText);
         location.getStyle().set("color", "#666").set("font-size", "0.875rem");
 
-        Span date = new Span(" " + event.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+        Span date = new Span(" " + dateText);
         date.getStyle().set("color", "#666").set("font-size", "0.875rem");
 
-        Span price = new Span(" " + String.format("%.2f dh", event.getPrixUnitaire()));
+        Span price = new Span(" " + priceText);
         price.getStyle()
                 .set("color", "#28a745")
                 .set("font-weight", "bold")
@@ -338,7 +356,9 @@ public class HomeView extends VerticalLayout {
                 .set("min-width", "300px")
                 .set("max-width", "400px");
 
-        card.addClickListener(e -> UI.getCurrent().navigate("event/" + event.getId()));
+        if (event.getId() != null) {
+            card.addClickListener(e -> UI.getCurrent().navigate("event/" + event.getId()));
+        }
 
         // Hover effect
         card.getElement().addEventListener("mouseenter", e ->
@@ -367,7 +387,17 @@ public class HomeView extends VerticalLayout {
         content.setPadding(true);
         content.setSpacing(false);
 
-        H4 title = new H4(event.getTitre());
+        String titleText = event.getTitre() != null ? event.getTitre() : "(Sans titre)";
+        String categoryText = event.getCategorie() != null ? event.getCategorie().toString() : "Sans catégorie";
+        String cityText = event.getVille() != null ? event.getVille() : "Ville inconnue";
+        String dateText = event.getDateDebut() != null
+            ? event.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+            : "Date à définir";
+        String priceText = event.getPrixUnitaire() != null
+            ? String.format("%.2f dh", event.getPrixUnitaire())
+            : "—";
+
+        H4 title = new H4(titleText);
         title.getStyle()
                 .set("margin", "0 0 0.5rem 0")
                 .set("color", "#333")
@@ -377,22 +407,22 @@ public class HomeView extends VerticalLayout {
         details.setSpacing(true);
         details.setWidthFull();
 
-        Span category = new Span(event.getCategorie().toString());
+        Span category = new Span(categoryText);
         category.getStyle()
                 .set("color", "#667eea")
                 .set("font-weight", "bold")
                 .set("font-size", "0.8rem");
 
-        Span location = new Span(" " + event.getVille());
+        Span location = new Span(" " + cityText);
         location.getStyle().set("color", "#666").set("font-size", "0.8rem");
 
         details.add(category, location);
         details.setFlexGrow(1, location);
 
-        Span date = new Span(" " + event.getDateDebut().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        Span date = new Span(" " + dateText);
         date.getStyle().set("color", "#666").set("font-size", "0.8rem");
 
-        Span price = new Span(" " + String.format("%.2f dh", event.getPrixUnitaire()));
+        Span price = new Span(" " + priceText);
         price.getStyle()
                 .set("color", "#28a745")
                 .set("font-weight", "bold")

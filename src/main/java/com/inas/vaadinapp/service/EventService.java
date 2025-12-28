@@ -95,13 +95,14 @@ public class EventService {
         }
 
         // Vérification : toutes les infos requises
+        Double prix = event.getPrixUnitaire();
         if (event.getTitre() == null ||
-                event.getDateDebut() == null ||
-                event.getDateFin() == null ||
-                event.getVille() == null ||
-                event.getLieu() == null ||
-                event.getPrixUnitaire() < 0 ||
-                event.getCapaciteMax() <= 0) {
+            event.getDateDebut() == null ||
+            event.getDateFin() == null ||
+            event.getVille() == null ||
+            event.getLieu() == null ||
+            prix == null || prix < 0 ||
+            event.getCapaciteMax() <= 0) {
             throw new IllegalArgumentException("Impossible de publier : informations manquantes");
         }
 
@@ -161,9 +162,9 @@ public class EventService {
 
         return events.stream()
                 .filter(e -> categorie == null || e.getCategorie() == categorie)
-                .filter(e -> start == null || e.getDateDebut().isAfter(start))
-                .filter(e -> end == null || e.getDateDebut().isBefore(end))
-                .filter(e -> prixMax == null || e.getPrixUnitaire() <= prixMax)
+            .filter(e -> start == null || (e.getDateDebut() != null && e.getDateDebut().isAfter(start)))
+            .filter(e -> end == null || (e.getDateDebut() != null && e.getDateDebut().isBefore(end)))
+            .filter(e -> prixMax == null || (e.getPrixUnitaire() != null && e.getPrixUnitaire() <= prixMax))
                 .collect(Collectors.toList());
     }
 
@@ -248,7 +249,7 @@ public class EventService {
         LocalDateTime now = LocalDateTime.now();
 
         List<Event> events = eventRepository.findAll().stream()
-                .filter(e -> e.getDateFin().isBefore(now))
+            .filter(e -> e.getDateFin() != null && e.getDateFin().isBefore(now))
                 .filter(e -> e.getStatus() == EventStatus.PUBLIE)
                 .collect(Collectors.toList());
 
