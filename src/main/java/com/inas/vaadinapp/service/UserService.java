@@ -1,16 +1,17 @@
 package com.inas.vaadinapp.service;
 
-import com.inas.vaadinapp.entity.User;
-import com.inas.vaadinapp.entity.Role;
-import com.inas.vaadinapp.repository.UserRepository;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import com.inas.vaadinapp.entity.Role;
+import com.inas.vaadinapp.entity.User;
+import com.inas.vaadinapp.repository.UserRepository;
 
 @Service
 public class UserService {
@@ -52,20 +53,8 @@ public class UserService {
     /* ------------------- AUTHENTIFICATION ------------------- */
 
     public Optional<User> login(String email, String password) {
-
-        Optional<User> userOpt = userRepository.findByEmail(email);
-
-        if (userOpt.isEmpty()) {
-            return Optional.empty();
-        }
-
-        User user = userOpt.get();
-
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            return Optional.empty();
-        }
-
-        return Optional.of(user);
+        return userRepository.findByEmail(email)
+                .filter(user -> passwordEncoder.matches(password, user.getPassword()));
     }
 
     /* ------------------- MISE À JOUR PROFIL ------------------- */
@@ -184,7 +173,7 @@ public class UserService {
         // Filtrage par statut actif
         if (actif != null) {
             users = users.stream()
-                    .filter(user -> user.getActif() == actif)
+                    .filter(user -> actif.equals(user.getActif()))
                     .toList();
         }
 

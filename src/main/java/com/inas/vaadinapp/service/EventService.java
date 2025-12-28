@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import com.inas.vaadinapp.entity.EventStatus;
 import com.inas.vaadinapp.entity.ReservationStatus;
 import com.inas.vaadinapp.entity.Role;
 import com.inas.vaadinapp.entity.User;
+import com.inas.vaadinapp.factory.EventFilterFactory;
 import com.inas.vaadinapp.repository.EventRepository;
 import com.inas.vaadinapp.repository.ReservationRepository;
 import com.inas.vaadinapp.repository.UserRepository;
@@ -152,20 +154,22 @@ public class EventService {
             Double prixMax
     ) {
         // Utiliser les méthodes du repository pour une meilleure performance
-        List<Event> events;
+        List<Event> events = Optional.ofNullable(ville)
+            .map(String::trim)
+            .filter(v -> !v.isEmpty())
+            .map(eventRepository::findByVilleIgnoreCase)
+            .orElseGet(eventRepository::findAll);
 
-        if (ville != null && !ville.trim().isEmpty()) {
-            events = eventRepository.findByVilleIgnoreCase(ville.trim());
-        } else {
-            events = eventRepository.findAll();
-        }
+        Predicate<Event> predicate = EventFilterFactory.andAll(List.of(
+            EventFilterFactory.byCategory(categorie),
+            EventFilterFactory.startAfter(start),
+            EventFilterFactory.startBefore(end),
+            EventFilterFactory.maxPrice(prixMax)
+        ));
 
         return events.stream()
-                .filter(e -> categorie == null || e.getCategorie() == categorie)
-            .filter(e -> start == null || (e.getDateDebut() != null && e.getDateDebut().isAfter(start)))
-            .filter(e -> end == null || (e.getDateDebut() != null && e.getDateDebut().isBefore(end)))
-            .filter(e -> prixMax == null || (e.getPrixUnitaire() != null && e.getPrixUnitaire() <= prixMax))
-                .collect(Collectors.toList());
+            .filter(predicate)
+            .collect(Collectors.toList());
     }
 
     /* --------------------- PLACES DISPONIBLES ------------------------ */
@@ -185,7 +189,7 @@ public class EventService {
 
     public List<Event> getPopularEvents(int limit) {
         return eventRepository.findAll().stream()
-                .sorted((e1, e2) -> e2.getReservations().size() - e1.getReservations().size())
+                .sorted(java.util.Comparator.comparingInt((Event e) -> e.getReservations().size()).reversed())
                 .limit(limit)
                 .collect(Collectors.toList());
     }

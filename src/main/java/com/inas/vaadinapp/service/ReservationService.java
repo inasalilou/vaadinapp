@@ -1,23 +1,28 @@
 package com.inas.vaadinapp.service;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.DoubleSummaryStatistics;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.inas.vaadinapp.entity.Event;
 import com.inas.vaadinapp.entity.EventStatus;
 import com.inas.vaadinapp.entity.Reservation;
 import com.inas.vaadinapp.entity.ReservationStatus;
 import com.inas.vaadinapp.entity.User;
+import com.inas.vaadinapp.observer.DomainEvents;
+import com.inas.vaadinapp.observer.ReservationDomainEvent;
 import com.inas.vaadinapp.repository.EventRepository;
 import com.inas.vaadinapp.repository.ReservationRepository;
 import com.inas.vaadinapp.repository.UserRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
-import java.util.stream.Collectors;
+import com.inas.vaadinapp.util.ReservationCodeGenerator;
 
 @Service
 public class ReservationService {
@@ -78,22 +83,30 @@ public class ReservationService {
         reservation.setMontantTotal(nbPlaces * event.getPrixUnitaire());
         reservation.setDateReservation(LocalDateTime.now());
         reservation.setStatus(ReservationStatus.EN_ATTENTE);
-        reservation.setCommentaire(commentaire);
+        reservation.setCommentaire(Optional.ofNullable(commentaire)
+            .map(String::trim)
+            .filter(s -> !s.isEmpty())
+            .orElse(null));
 
         String code = generateUniqueCode();
         reservation.setCodeReservation(code);
 
-        return reservationRepository.save(reservation);
+        Reservation saved = reservationRepository.save(reservation);
+        DomainEvents.getInstance().reservationEvents().publish(new ReservationDomainEvent(
+            ReservationDomainEvent.Type.CREATED,
+            saved.getId(),
+            eventId,
+            userId,
+            saved.getStatus(),
+            LocalDateTime.now()
+        ));
+
+        return saved;
     }
 
     private String generateUniqueCode() {
-        Random random = new Random();
-        String code;
-        do {
-            int n = random.nextInt(100000); // 0..99999
-            code = String.format("EVT-%05d", n);
-        } while (reservationRepository.existsByCodeReservation(code));
-        return code;
+        return ReservationCodeGenerator.getInstance()
+            .generateUnique(reservationRepository::existsByCodeReservation);
     }
 
     /* ================== LECTURE ================== */
@@ -129,7 +142,16 @@ public class ReservationService {
         }
 
         r.setStatus(ReservationStatus.ANNULEE);
-        reservationRepository.save(r);
+        Reservation saved = reservationRepository.save(r);
+
+        DomainEvents.getInstance().reservationEvents().publish(new ReservationDomainEvent(
+            ReservationDomainEvent.Type.CANCELLED,
+            saved.getId(),
+            saved.getEvent().getId(),
+            userId,
+            saved.getStatus(),
+            LocalDateTime.now()
+        ));
         // logique de remboursement éventuelle à ajouter plus tard
     }
 
@@ -140,11 +162,13 @@ public class ReservationService {
     }
 
     public double totalSpentByUser(Long userId) {
-        return reservationRepository.findByClientId(userId).stream()
-                .filter(r -> r.getStatus() == ReservationStatus.CONFIRMEE
-                        || r.getStatus() == ReservationStatus.EN_ATTENTE)
-                .mapToDouble(Reservation::getMontantTotal)
-                .sum();
+        DoubleSummaryStatistics stats = reservationRepository.findByClientId(userId).stream()
+            .filter(r -> r.getStatus() == ReservationStatus.CONFIRMEE
+                || r.getStatus() == ReservationStatus.EN_ATTENTE)
+            .map(Reservation::getMontantTotal)
+            .filter(Objects::nonNull)
+            .collect(Collectors.summarizingDouble(Double::doubleValue));
+        return stats.getSum();
     }
 
     /* ================== CONFIRMATION ================== */
@@ -171,7 +195,18 @@ public class ReservationService {
         }
 
         reservation.setStatus(ReservationStatus.CONFIRMEE);
-        return reservationRepository.save(reservation);
+        Reservation saved = reservationRepository.save(reservation);
+
+        DomainEvents.getInstance().reservationEvents().publish(new ReservationDomainEvent(
+            ReservationDomainEvent.Type.CONFIRMED,
+            saved.getId(),
+            saved.getEvent().getId(),
+            userId,
+            saved.getStatus(),
+            LocalDateTime.now()
+        ));
+
+        return saved;
     }
 
     /* ================== RECAPITULATIF ================== */
@@ -205,8 +240,8 @@ public class ReservationService {
         long currentMonthReservations = reservationRepository.findByDateReservationBetween(startOfMonth, endOfMonth).size();
 
         return new ReservationStatistics(totalReservations, pending, confirmed, cancelled,
-                totalRevenue != null ? totalRevenue : 0.0,
-                totalPlacesReserved != null ? totalPlacesReserved : 0,
+            Optional.ofNullable(totalRevenue).orElse(0.0),
+            Optional.ofNullable(totalPlacesReserved).orElse(0),
                 currentMonthReservations);
     }
 
@@ -227,8 +262,8 @@ public class ReservationService {
 
         // Total des réservations pour tous les événements de l'organisateur
         long totalReservations = eventIds.stream()
-                .mapToLong(eventId -> reservationRepository.findByEventId(eventId).size())
-                .sum();
+            .map(eventId -> (long) reservationRepository.findByEventId(eventId).size())
+            .reduce(0L, Long::sum);
 
         // Réservations actives (EN_ATTENTE + CONFIRMEE)
         long activeReservations = eventIds.stream()
